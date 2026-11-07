@@ -76,3 +76,9 @@ Durante esta preparación se encontraron credenciales reales en `.env.example` y
 La migracion `20261107182512_StockReservations` crea `public.stock_reservations`. En bases existentes, cuando la tabla exista, ejecuta `04_stock_reservations_rls.sql` completo desde el SQL Editor de Supabase con el rol `postgres`. Esto habilita RLS, revoca permisos directos a `anon`, `authenticated` y `PUBLIC`, y agrega una politica restrictiva que deniega acceso desde PostgREST. La API continua operando mediante su conexion PostgreSQL de servidor; no agregues politicas publicas para esta tabla.
 
 El `01_setup.sql` reejecutable tambien aplica esa proteccion cuando la tabla ya existe, y la migracion del backend la aplica al crearla en una instalacion nueva. `03_verify.sql` confirma las seis migraciones y que las doce tablas (incluido el historial EF) tengan RLS y acceso de navegador bloqueado.
+
+## Reiniciar datos y preparar usuarios de demo
+
+`demo_reset_data.sql` vacia los datos operativos de UniFlow (pedidos, eventos, franjas, horarios, productos, categorias, inventario, auditoria, roles y configuracion) dentro de una transaccion. Conserva las tablas, las migraciones de EF, los usuarios de Supabase Auth y las imagenes del bucket. Para evitar una ejecucion accidental, antes de correrlo debes descomentar la linea `SET LOCAL uniflow.confirm_demo_reset = 'WIPE_DEMO_DATA';`. Ejecutalo solo en el proyecto que usaras para la demo.
+
+SQL no crea usuarios de inicio de sesion en Supabase Auth de forma soportada. Crea o confirma primero las dos cuentas en **Authentication > Users**; despues ejecuta `demo_staff_roles.sql` para dar `administrator` a `lamouroux7@gmail.com` y `operator` a `lamouroux007@gmail.com`. Cambia esos dos correos en el archivo si usaras cuentas distintas. El script falla antes de asignar roles si falta alguna cuenta. Tras ambos pasos, carga los productos y configuracion de demo desde el panel o mediante un seed separado.
