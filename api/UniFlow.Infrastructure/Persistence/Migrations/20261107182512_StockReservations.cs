@@ -32,6 +32,10 @@ namespace UniFlow.Infrastructure.Persistence.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.Sql("ALTER TABLE public.stock_reservations ENABLE ROW LEVEL SECURITY;");
+            migrationBuilder.Sql("REVOKE ALL PRIVILEGES ON TABLE public.stock_reservations FROM anon, authenticated, PUBLIC;");
+            migrationBuilder.Sql("CREATE POLICY uniflow_api_only ON public.stock_reservations AS RESTRICTIVE FOR ALL TO anon, authenticated USING (false) WITH CHECK (false);");
+
             migrationBuilder.CreateIndex(
                 name: "IX_stock_reservations_ExpiresAt",
                 table: "stock_reservations",

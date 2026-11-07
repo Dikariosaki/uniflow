@@ -5,7 +5,7 @@
 WITH expected_tables (table_name) AS (
     VALUES ('business_settings'), ('categories'), ('products'), ('opening_hours'),
            ('pickup_slots'), ('orders'), ('order_items'), ('order_events'),
-           ('staff_roles'), ('admin_audit_events'), ('__EFMigrationsHistory')
+           ('staff_roles'), ('admin_audit_events'), ('stock_reservations'), ('__EFMigrationsHistory')
 ), table_security AS (
     SELECT e.table_name, c.relrowsecurity,
            NOT has_table_privilege('anon', c.oid, 'SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER')
@@ -21,17 +21,17 @@ WITH expected_tables (table_name) AS (
 ), expected_migrations (id) AS (
     VALUES ('20261107074638_InitialCreate'), ('20261107075102_CapacityRelease'),
            ('20261107075342_EnableRowLevelSecurity'), ('20261107080801_ProductIntegrity'),
-           ('20261107080831_AdminAuditEvents')
+           ('20261107080831_AdminAuditEvents'), ('20261107182512_StockReservations')
 )
-SELECT 'Tablas esperadas y RLS (11, incluido historial EF)' AS control,
-       count(*) = 11 AND count(*) FILTER (WHERE relrowsecurity IS TRUE) = 11 AS ok
+SELECT 'Tablas esperadas y RLS (12, incluido historial EF)' AS control,
+       count(*) = 12 AND count(*) FILTER (WHERE relrowsecurity IS TRUE) = 12 AS ok
 FROM table_security
 UNION ALL
 SELECT 'Tablas sin permisos de navegador ni acceso directo por políticas',
-       count(*) FILTER (WHERE browser_denied IS TRUE AND api_only IS TRUE) = 11
+       count(*) FILTER (WHERE browser_denied IS TRUE AND api_only IS TRUE) = 12
 FROM table_security
 UNION ALL
-SELECT 'Cinco migraciones del backend registradas', count(*) = 5
+SELECT 'Seis migraciones del backend registradas', count(*) = 6
 FROM expected_migrations AS e
 JOIN public."__EFMigrationsHistory" AS h ON h."MigrationId" = e.id
 UNION ALL

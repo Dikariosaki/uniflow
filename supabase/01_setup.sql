@@ -418,6 +418,14 @@ BEGIN
             table_name
         );
     END LOOP;
+    -- Stock reservations are introduced by a later EF migration.
+    IF to_regclass('public.stock_reservations') IS NOT NULL THEN
+        ALTER TABLE public.stock_reservations ENABLE ROW LEVEL SECURITY;
+        REVOKE ALL PRIVILEGES ON TABLE public.stock_reservations FROM anon, authenticated, PUBLIC;
+        DROP POLICY IF EXISTS uniflow_api_only ON public.stock_reservations;
+        CREATE POLICY uniflow_api_only ON public.stock_reservations
+            AS RESTRICTIVE FOR ALL TO anon, authenticated USING (false) WITH CHECK (false);
+    END IF;
     EXECUTE format('REVOKE ALL PRIVILEGES ON SEQUENCE %s FROM anon, authenticated, PUBLIC',
                    pg_get_serial_sequence('public.business_settings', 'Id'));
 END $security$;

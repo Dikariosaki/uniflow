@@ -1,20 +1,21 @@
 # Preparar Supabase para UniFlow
 
-Estos archivos corresponden al backend actual y sus cinco migraciones de EF Core. No contienen credenciales ni datos de demostración. Ejecuta cada archivo **completo** en el **SQL Editor**, con el rol **postgres**, siguiendo este orden.
+La configuracion SQL instala el esquema base y protege las tablas del navegador; la tabla de reservas de stock se incorpora en una migracion posterior. No contiene credenciales ni datos de demostracion.
 
 | Paso | Archivo | Resultado |
 | --- | --- | --- |
 | 1 | [01_setup.sql](01_setup.sql) | Diez tablas de aplicación, historial EF, claves foráneas, índices, restricciones, RLS, permisos y bucket de imágenes protegido. |
 | 2 | [02_first_admin.sql](02_first_admin.sql) | Asigna el rol de administrador a un usuario existente de Supabase Auth y registra la asignación en auditoría. |
-| 3 | [03_verify.sql](03_verify.sql) | Comprueba el esquema, las migraciones, la seguridad, Storage y la existencia del administrador. Muestra también pendientes operativos. |
+| 3 | [04_stock_reservations_rls.sql](04_stock_reservations_rls.sql) | Habilita RLS y bloquea el acceso directo a las reservas de stock creadas por la migracion mas reciente. |
+| 4 | [03_verify.sql](03_verify.sql) | Comprueba las seis migraciones, las doce tablas con RLS, Storage y el administrador. |
 
 ## 1. Instalar el esquema y Storage
 
 Abre `01_setup.sql`, copia todo su contenido y ejecútalo. El bucket se llama **`uniflow-images`**, igual que `SUPABASE_PRODUCT_BUCKET` en la plantilla `.env.example`. Si eliges otro nombre, cambia esa variable en tu `.env` y las referencias al bucket en `01_setup.sql` y `03_verify.sql`.
 
-El script se puede repetir: usa el historial `__EFMigrationsHistory` para aplicar solo las migraciones pendientes y conserva los datos existentes. Toda la instalación se ejecuta en una transacción: un error revierte esa ejecución. No lo ejecutes al mismo tiempo que una migración del backend. Si ya creaste tablas manualmente sin su historial EF, detente ante un conflicto y revisa las diferencias; el instalador no las elimina ni adopta automáticamente.
+El script se puede repetir y aplica el esquema base de las cinco migraciones iniciales. La migracion mas reciente, `StockReservations`, se aplica por el flujo EF del backend; despues ejecuta `04_stock_reservations_rls.sql`. Toda la instalacion base se ejecuta en una transaccion. No ejecutes el instalador al mismo tiempo que una migracion.
 
-Las tablas creadas son `business_settings`, `categories`, `products`, `opening_hours`, `pickup_slots`, `orders`, `order_items`, `order_events`, `staff_roles` y `admin_audit_events`. Sus nombres de columnas respetan las mayúsculas del modelo EF y deben conservar las comillas dobles al escribir SQL.
+Las diez tablas iniciales son `business_settings`, `categories`, `products`, `opening_hours`, `pickup_slots`, `orders`, `order_items`, `order_events`, `staff_roles` y `admin_audit_events`. La migracion `20261107182512_StockReservations` agrega `stock_reservations`; aplica su migracion y luego `04_stock_reservations_rls.sql`.
 
 RLS y los permisos bloquean el acceso directo desde el navegador a las tablas de UniFlow, incluido el historial EF. La API accede mediante su conexión PostgreSQL del servidor como propietario (`postgres` en la configuración habitual de Supabase). Si utilizas un usuario de base de datos personalizado, debes configurar explícitamente sus permisos y acceso con RLS antes de desplegar.
 
@@ -32,7 +33,7 @@ El script asigna `administrator` y activa la cuenta dentro de UniFlow. Repetirlo
 
 ## 3. Verificar y conectar la aplicación
 
-Ejecuta `03_verify.sql`. Todos los controles del primer resultado deben indicar `ok = true`. Los pendientes operativos pueden aparecer como `false` hasta que configures el panel; estas consultas no certifican una conexión de la API ni prueban el envío de correos.
+Despues de aplicar la migracion `StockReservations` y ejecutar `04_stock_reservations_rls.sql`, ejecuta `03_verify.sql`. Todos los controles del primer resultado deben indicar `ok = true`. Los pendientes operativos pueden aparecer como `false` hasta que configures el panel; estas consultas no certifican una conexion de la API ni prueban el envio de correos.
 
 Completa tu `.env` con los datos de **tu proyecto**:
 
@@ -46,7 +47,7 @@ MIGRATE_ON_STARTUP=false
 ENSURE_STORAGE_BUCKET_ON_STARTUP=true
 ```
 
-Obtén el host, puerto y usuario de **Connect** en Supabase. Usa conexión directa o **session pooler** para migraciones; la contraseña es la de PostgreSQL del proyecto. La aplicación utiliza el formato de conexión **Npgsql** mostrado arriba. Con el SQL aplicado no hace falta activar `MIGRATE_ON_STARTUP` para estas cinco migraciones; las futuras migraciones se deben aplicar por el flujo de despliegue elegido. El inicio de la API comprueba el bucket y mantiene sus restricciones mediante Storage.
+Obten el host, puerto y usuario de **Connect** en Supabase. Usa conexion directa o **session pooler** para migraciones; la contrasena es la de PostgreSQL del proyecto. La aplicacion utiliza el formato **Npgsql** mostrado arriba. `01_setup.sql` aplica las cinco migraciones base; la migracion `StockReservations` debe aplicarse una vez por el flujo EF elegido y protegerse con `04_stock_reservations_rls.sql`. No dejes las migraciones automaticas habilitadas sin un flujo de despliegue controlado. La API comprueba el bucket al iniciar.
 
 Configura también desde el Dashboard; estos ajustes no los crean los scripts SQL:
 
@@ -68,3 +69,10 @@ dotnet ef migrations script --idempotent --no-transactions --project api/UniFlow
 Al añadir migraciones, regenera esa sección y conserva el envoltorio transaccional y las secciones de seguridad/Storage. No sobrescribas `01_setup.sql` directamente con ese comando: perderías esas secciones. Los cambios del modelo deben tener su correspondiente migración EF; no añadas columnas solo por SQL.
 
 Durante esta preparación se encontraron credenciales reales en `.env.example` y se reemplazaron por marcadores. Rota la clave privilegiada y la contraseña PostgreSQL que estaban en esa plantilla y actualiza tu `.env`; las copias anteriores de la plantilla pueden seguir conteniéndolas. La plantilla pública debe conservar solo marcadores.
+
+
+## Alerta RLS de stock_reservations
+
+La migracion `20261107182512_StockReservations` crea `public.stock_reservations`. En bases existentes, cuando la tabla exista, ejecuta `04_stock_reservations_rls.sql` completo desde el SQL Editor de Supabase con el rol `postgres`. Esto habilita RLS, revoca permisos directos a `anon`, `authenticated` y `PUBLIC`, y agrega una politica restrictiva que deniega acceso desde PostgREST. La API continua operando mediante su conexion PostgreSQL de servidor; no agregues politicas publicas para esta tabla.
+
+El `01_setup.sql` reejecutable tambien aplica esa proteccion cuando la tabla ya existe, y la migracion del backend la aplica al crearla en una instalacion nueva. `03_verify.sql` confirma las seis migraciones y que las doce tablas (incluido el historial EF) tengan RLS y acceso de navegador bloqueado.
