@@ -1,13 +1,14 @@
 # Preparar Supabase para UniFlow
 
-La configuracion SQL instala el esquema base y protege las tablas del navegador; la tabla de reservas de stock se incorpora en una migracion posterior. No contiene credenciales ni datos de demostracion.
+La configuracion SQL instala el esquema base, protege las tablas del navegador y ofrece datos de catalogo para el piloto. No contiene credenciales.
 
 | Paso | Archivo | Resultado |
 | --- | --- | --- |
 | 1 | [01_setup.sql](01_setup.sql) | Diez tablas de aplicación, historial EF, claves foráneas, índices, restricciones, RLS, permisos y bucket de imágenes protegido. |
 | 2 | [02_first_admin.sql](02_first_admin.sql) | Asigna el rol de administrador a un usuario existente de Supabase Auth y registra la asignación en auditoría. |
 | 3 | [04_stock_reservations_rls.sql](04_stock_reservations_rls.sql) | Habilita RLS y bloquea el acceso directo a las reservas de stock creadas por la migracion mas reciente. |
-| 4 | [03_verify.sql](03_verify.sql) | Comprueba las seis migraciones, las doce tablas con RLS, Storage y el administrador. |
+| 4 | [catalogo_colombiano.sql](catalogo_colombiano.sql) | Carga 50 productos, seis categorias, inventario, horario semanal y franjas para 14 dias. |
+| 5 | [03_verify.sql](03_verify.sql) | Comprueba las seis migraciones, las doce tablas con RLS, Storage y el administrador. |
 
 ## 1. Instalar el esquema y Storage
 
@@ -81,4 +82,4 @@ El `01_setup.sql` reejecutable tambien aplica esa proteccion cuando la tabla ya 
 
 `demo_reset_data.sql` vacia los datos operativos de UniFlow (pedidos, eventos, franjas, horarios, productos, inventario, auditoria, roles y configuracion) dentro de una transaccion. Conserva las tablas, las migraciones de EF, los usuarios de Supabase Auth y las imagenes del bucket. Es destructivo y cada ejecucion vuelve a vaciar esas tablas; ejecutalo solo en el proyecto que usaras para la demo.
 
-SQL no crea usuarios de inicio de sesion en Supabase Auth de forma soportada. Crea o confirma primero las dos cuentas en **Authentication > Users**; despues ejecuta `demo_staff_roles.sql` para dar `administrator` a `lamouroux7@gmail.com` y `operator` a `lamouroux007@gmail.com`. Cambia esos dos correos en el archivo si usaras cuentas distintas. El script falla antes de asignar roles si falta alguna cuenta. Tras ambos pasos, carga los productos y configuracion de demo desde el panel o mediante un seed separado.
+SQL no crea usuarios de inicio de sesion en Supabase Auth de forma soportada. Crea o confirma primero las dos cuentas en **Authentication > Users**; despues ejecuta `demo_staff_roles.sql` para dar `administrator` a `lamouroux7@gmail.com` y `operator` a `lamouroux007@gmail.com`. Cambia esos dos correos en el archivo si usaras cuentas distintas. El script falla antes de asignar roles si falta alguna cuenta. Tras ambos pasos, carga los productos y configuracion de demo desde el panel o ejecuta `catalogo_colombiano.sql` para cargar el menu, stock, horario y franjas.

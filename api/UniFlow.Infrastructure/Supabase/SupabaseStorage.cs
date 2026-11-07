@@ -101,7 +101,15 @@ public sealed class SupabaseStorage(HttpClient http, IConfiguration config, ILog
             && response.Content.Headers.ContentLength is > 0 and <= 5_000_000;
     }
 
-    public string? PublicUrl(string? path) => string.IsNullOrWhiteSpace(path) || string.IsNullOrWhiteSpace(config["Supabase:Url"]) ? null : $"{config["Supabase:Url"]!.TrimEnd('/')}/storage/v1/object/public/{config["Supabase:ProductBucket"] ?? "product-images"}/{path}";
+    public string? PublicUrl(string? path)
+    {
+        if (string.IsNullOrWhiteSpace(path)) return null;
+        if (Uri.TryCreate(path, UriKind.Absolute, out var uri)
+            && (uri.Scheme == Uri.UriSchemeHttps || uri.Scheme == Uri.UriSchemeHttp))
+            return uri.AbsoluteUri;
+        if (string.IsNullOrWhiteSpace(config["Supabase:Url"])) return null;
+        return $"{config["Supabase:Url"]!.TrimEnd('/')}/storage/v1/object/public/{config["Supabase:ProductBucket"] ?? "product-images"}/{path}";
+    }
 
     private static void AddCredentials(HttpRequestMessage request, string key)
     {
