@@ -1,0 +1,70 @@
+<section class="track-view">
+  <div class="track-top">
+    <span class="eyebrow">SEGUIMIENTO EN VIVO</span
+    ><span class="open-pill"><i></i> Actualización automática</span>
+  </div>
+  <div class="track-card panel-card" *ngIf="vm.track; else trackLoading">
+    <div class="track-status-icon" [class.ready]="vm.track.status === 'LISTO'">
+      <span class="material-symbol" aria-hidden="true">{{ ['LISTO', 'ENTREGADO'].includes(vm.track.status) ? 'check_circle' : 'schedule' }}</span>
+    </div>
+    <span class="eyebrow">PEDIDO #{{ vm.orderNumber(vm.track.id) }}</span>
+    <h1>{{ vm.statusLabel(vm.track.status) }}</h1>
+    <p>
+      {{
+        vm.track.status === 'LISTO'
+          ? '¡Ya puedes pasar por tu pedido!'
+          : vm.track.status === 'ENTREGADO'
+            ? 'Tu pedido fue entregado. ¡Que lo disfrutes!'
+            : vm.track.status === 'CANCELADO' || vm.track.status === 'RECHAZADO'
+              ? 'El personal cerró este pedido. Consulta en la cafetería si necesitas ayuda.'
+              : 'Te avisaremos aquí cuando cambie el estado.'
+      }}
+    </p>
+    <div class="stepper">
+      <div class="step done">
+        <span class="material-symbol" aria-hidden="true">check</span>
+        <div><strong>Pedido confirmado</strong><small>Recibimos tu pedido</small></div>
+      </div>
+      <div
+        class="step"
+        [class.done]="['EN_PREPARACION', 'LISTO', 'ENTREGADO'].includes(vm.track.status)"
+      >
+        <span>2</span>
+        <div><strong>En preparación</strong><small>La cocina está trabajando</small></div>
+      </div>
+      <div class="step" [class.done]="['LISTO', 'ENTREGADO'].includes(vm.track.status)">
+        <span>3</span>
+        <div><strong>Listo para recoger</strong><small>Presenta el código al personal</small></div>
+      </div>
+      <div class="step" [class.done]="vm.track.status === 'ENTREGADO'">
+        <span>4</span>
+        <div><strong>Entregado</strong><small>¡Que lo disfrutes!</small></div>
+      </div>
+    </div>
+    <div class="pickup-code">
+      <small>CÓDIGO DE RECOGIDA</small><strong>{{ vm.track.pickupCode }}</strong
+      ><span>Horario estimado · {{ vm.time(vm.track.slot) }}</span>
+    </div>
+    <div class="track-items">
+      <div class="price-breakdown-row" *ngFor="let item of vm.track.items">
+        <div class="price-breakdown-copy">
+          <strong>{{ item.nameSnapshot }}</strong>
+          <small>{{ item.quantity }} × {{ vm.money(item.unitPriceCop ?? 0) }} por unidad</small>
+        </div>
+        <strong class="price-breakdown-amount">{{ vm.money(item.subtotalCop ?? (item.unitPriceCop ?? 0) * item.quantity) }}</strong>
+      </div>
+      <div class="order-total-row">
+        <div><span>Total del pedido</span><small>Suma de los subtotales</small></div>
+        <strong>{{ vm.money(vm.track.totalCop) }}</strong>
+      </div>
+    </div>
+    <p>Pago presencial en la cafetería · {{ vm.dateLabel(vm.track.createdAt) }}</p>
+  </div>
+  <ng-template #trackLoading
+    ><div class="empty-state">
+      <span class="material-symbol" aria-hidden="true">schedule</span>
+      <h2>Consultando tu pedido…</h2>
+      <p>{{ vm.message }}</p>
+    </div></ng-template
+  >
+</section>

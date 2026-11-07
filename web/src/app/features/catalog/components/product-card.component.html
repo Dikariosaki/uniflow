@@ -1,0 +1,35 @@
+<article class="product-card">
+  <div class="product-image" [class.unavailable]="!product.available">
+    <img *ngIf="product.imageUrl" [src]="product.imageUrl" [alt]="product.name" loading="lazy" />
+    <span *ngIf="!product.imageUrl" class="food-fallback material-symbol" aria-hidden="true">{{
+      product.categoryName.toLowerCase().includes('beb') ||
+      product.categoryName.toLowerCase().includes('café')
+        ? 'local_cafe'
+        : product.categoryName.toLowerCase().includes('post')
+          ? 'cake'
+          : 'restaurant'
+    }}</span>
+    <span *ngIf="!product.available" class="sold-out">Agotado</span>
+  </div>
+  <div class="product-copy">
+    <span class="eyebrow">{{ product.categoryName }}</span>
+    <h3>{{ product.name }}</h3>
+    <p>{{ product.description }}</p>
+    <div class="product-bottom">
+      <strong>{{ money(product.priceCop) }}</strong
+      ><div class="product-cart-stepper" *ngIf="quantity > 0; else addProductButton" aria-label="Cantidad seleccionada">
+        <button type="button" [disabled]="!online" (click)="quantityChanged.emit(-1)" [attr.aria-label]="'Quitar ' + product.name"><span class="material-symbol" aria-hidden="true">remove</span></button>
+        <span>{{ quantity }}</span>
+        <button type="button" [disabled]="!online" (click)="added.emit(product)" [attr.aria-label]="'Agregar otro ' + product.name"><span class="material-symbol" aria-hidden="true">add</span></button>
+      </div>
+      <ng-template #addProductButton><button
+        class="add-button"
+        [disabled]="!product.available || !online"
+        (click)="added.emit(product)"
+        [attr.aria-label]="'Agregar ' + product.name"
+      >
+        <span class="material-symbol" aria-hidden="true">add</span>
+      </button></ng-template>
+    </div>
+  </div>
+</article>

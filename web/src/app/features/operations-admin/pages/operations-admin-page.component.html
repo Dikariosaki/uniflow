@@ -1,0 +1,244 @@
+<section class="staff-main">
+  <div class="staff-header">
+    <div>
+      <span class="eyebrow">ADMINISTRACIÓN</span>
+      <h1>Reportes y cupos</h1>
+      <p>Consulta la actividad y configura horarios de recogida.</p>
+    </div>
+    <button class="button button-outline" (click)="vm.loadReport()"><span class="material-symbol" aria-hidden="true">refresh</span> Actualizar métricas</button>
+  </div>
+  <fieldset class="admin-fields" [disabled]="vm.isLoading">
+    <div class="metric-row" *ngIf="vm.report">
+      <article class="metric-card">
+        <span>Pedidos creados</span><strong>{{ vm.report['created'] }}</strong
+        ><small>En el día</small>
+      </article>
+      <article class="metric-card">
+        <span>Listos</span><strong>{{ vm.report['ready'] }}</strong
+        ><small>Preparación completada</small>
+      </article>
+      <article class="metric-card">
+        <span>Entregados</span><strong>{{ vm.report['delivered'] }}</strong
+        ><small>Recogida verificada</small>
+      </article>
+      <article class="metric-card highlight">
+        <span>Ventas entregadas</span
+        ><strong>{{ vm.money(vm.num(vm.report['revenueCop'])) }}</strong
+        ><small>Pago en cafetería</small>
+      </article>
+    </div>
+    <div class="admin-columns">
+      <div class="panel-card form-card">
+        <h2>Configuración de operación</h2>
+        <form (ngSubmit)="vm.saveSettings()">
+          <label>Nombre del punto<input name="cafeteria" [(ngModel)]="vm.settings.name" /></label
+          ><label
+            >Aviso mínimo (minutos)<input
+              type="number"
+              min="0"
+              max="1440"
+              name="notice"
+              [(ngModel)]="vm.settings.minimumNoticeMinutes" /></label
+          ><label class="check-label"
+            ><input type="checkbox" name="paused" [(ngModel)]="vm.settings.ordersPaused" /> Pausar
+            nuevos pedidos</label
+          ><button class="button button-primary">Guardar configuración</button>
+        </form>
+        <hr />
+        <h2>Horario semanal</h2>
+        <div class="opening-row" *ngFor="let hour of vm.openingHours; let i = index">
+          <strong>{{ vm.weekdays[i] }}</strong
+          ><label class="check-label"
+            ><input type="checkbox" [(ngModel)]="hour.closed" [name]="'closed' + i" />
+            Cerrado</label
+          ><ng-container *ngIf="!hour.closed"
+            ><input
+              type="time"
+              [(ngModel)]="hour.opensAt"
+              [name]="'opens' + i"
+              aria-label="Hora de apertura" /><input
+              type="time"
+              [(ngModel)]="hour.closesAt"
+              [name]="'closes' + i"
+              aria-label="Hora de cierre"
+          /></ng-container>
+        </div>
+        <button class="button button-outline" (click)="vm.saveSchedule()">Guardar horario</button>
+        <hr />
+        <h2>Excepción de fecha</h2>
+        <form (ngSubmit)="vm.addException()">
+          <label
+            >Fecha<input
+              type="date"
+              name="exceptionDate"
+              [(ngModel)]="vm.exceptionDraft.date"
+              required /></label
+          ><label class="check-label"
+            ><input type="checkbox" name="exceptionClosed" [(ngModel)]="vm.exceptionDraft.closed" />
+            Cerrado este día</label
+          >
+          <div class="form-grid" *ngIf="!vm.exceptionDraft.closed">
+            <label
+              >Apertura<input
+                type="time"
+                name="exceptionOpen"
+                [(ngModel)]="vm.exceptionDraft.opensAt" /></label
+            ><label
+              >Cierre<input
+                type="time"
+                name="exceptionClose"
+                [(ngModel)]="vm.exceptionDraft.closesAt"
+            /></label>
+          </div>
+          <button class="button button-outline">Guardar excepción</button>
+        </form>
+        <hr />
+        <h2>Crear franja</h2>
+        <form (ngSubmit)="vm.createSlot()">
+          <label
+            >Inicio (hora de Bogotá)<input
+              type="datetime-local"
+              name="slotStart"
+              [(ngModel)]="vm.slotDraft.startsAt"
+              required /></label
+          ><label
+            >Fin (hora de Bogotá)<input
+              type="datetime-local"
+              name="slotEnd"
+              [(ngModel)]="vm.slotDraft.endsAt"
+              required /></label
+          ><label
+            >Capacidad (pedidos)<input
+              type="number"
+              name="capacity"
+              min="0"
+              [(ngModel)]="vm.slotDraft.capacity"
+              required /></label
+          ><button class="button button-primary">Crear franja</button>
+        </form>
+        <hr />
+        <h2>Franjas de hoy</h2>
+        <div class="admin-slot" *ngFor="let slot of vm.adminSlots; let i = index">
+          <div>
+            <strong>{{ vm.time(slot.startsAt) }} – {{ vm.time(slot.endsAt) }}</strong
+            ><small>{{ slot.id.slice(0, 8) }}</small>
+          </div>
+          <label
+            >Capacidad<input
+              type="number"
+              min="0"
+              [(ngModel)]="slot.capacity"
+              [name]="'slotCapacity' + i"
+          /></label>
+          <label class="check-label"
+            ><input type="checkbox" [(ngModel)]="slot.active" [name]="'slotActive' + i" />
+            Activa</label
+          >
+          <button class="text-button" (click)="vm.saveSlot(slot)">Guardar</button>
+        </div>
+        <p class="helper-text" *ngIf="!vm.adminSlots.length">
+          No hay franjas configuradas para hoy.
+        </p>
+      </div>
+      <div class="panel-card report-card">
+        <h2>Operación clara, ajustes informados</h2>
+        <p>
+          Las franjas y capacidades son configurables por el administrador. Define los horarios con
+          el personal antes de habilitar pedidos reales.
+        </p>
+        <div class="report-note">
+          <span class="material-symbol" aria-hidden="true">schedule</span>
+          <div><strong>Zona horaria</strong><small>America/Bogota · UTC-5</small></div>
+        </div>
+        <div class="report-note">
+          <span class="material-symbol" aria-hidden="true">receipt_long</span>
+          <div>
+            <strong>Unidad de capacidad</strong><small>Pedidos confirmados por franja</small>
+          </div>
+        </div>
+        <button class="button button-outline" (click)="vm.downloadReport()">Exportar CSV</button>
+                <section class="staff-management">
+          <div class="staff-section-heading">
+            <div>
+              <h2>Invitar personal</h2>
+              <p>Agrega a tu equipo y define su nivel de acceso.</p>
+            </div>
+          </div>
+          <form class="staff-invite-form" (ngSubmit)="vm.inviteStaff()">
+            <label class="staff-field">
+              <span>Correo electr&oacute;nico</span>
+              <input type="email" name="staffEmail" [(ngModel)]="vm.staffDraft.email" placeholder="nombre@universidad.edu.co" autocomplete="email" required />
+            </label>
+            <label class="staff-field">
+              <span>Rol</span>
+              <select name="staffRole" [(ngModel)]="vm.staffDraft.role">
+                <option value="operator">Operador</option>
+                <option value="administrator">Administrador</option>
+              </select>
+            </label>
+            <button class="button button-primary staff-invite-button">Enviar invitaci&oacute;n</button>
+          </form>
+        </section>
+
+        <section class="staff-management">
+          <div class="staff-section-heading">
+            <div>
+              <h2>Accesos del personal</h2>
+              <p>Administra los permisos y el estado de cada cuenta.</p>
+            </div>
+            <span class="staff-count">{{ vm.staffMembers.length }} personas</span>
+          </div>
+          <div class="staff-access-list" *ngIf="vm.staffMembers.length; else emptyStaff">
+            <article class="staff-member" *ngFor="let member of vm.staffMembers">
+              <div class="staff-member-identity">
+                <span class="staff-person-mark">{{ (member.email || 'P').slice(0, 1).toUpperCase() }}</span>
+                <div>
+                  <strong>{{ member.email || 'Correo no disponible' }}</strong>
+                  <small>{{ member.active ? 'Acceso activo' : 'Acceso desactivado' }}</small>
+                </div>
+              </div>
+              <div class="staff-member-controls">
+                <label class="staff-field staff-role-field">
+                  <span>Rol</span>
+                  <select [(ngModel)]="member.role" [name]="'memberRole' + member.userId" [attr.aria-label]="'Rol de ' + (member.email || 'este usuario')">
+                    <option value="operator">Operador</option>
+                    <option value="administrator">Administrador</option>
+                  </select>
+                </label>
+                <label class="check-label staff-active-toggle">
+                  <input type="checkbox" [(ngModel)]="member.active" [name]="'memberActive' + member.userId" />
+                  Activo
+                </label>
+                <button class="button button-quiet staff-save-button" (click)="vm.updateStaffRole(member)">Guardar cambios</button>
+              </div>
+            </article>
+          </div>
+          <ng-template #emptyStaff>
+            <div class="staff-empty-state">A&uacute;n no hay accesos de personal.</div>
+          </ng-template>
+        </section>
+
+        <section class="staff-management staff-audit-section">
+          <div class="staff-section-heading">
+            <div>
+              <h2>Auditor&iacute;a de cambios</h2>
+              <p>Actividad reciente en la configuraci&oacute;n de la cafeter&iacute;a.</p>
+            </div>
+          </div>
+          <div class="staff-audit-list" role="region" aria-label="Cambios recientes; desplázate para ver más" *ngIf="vm.auditEvents.length; else emptyAudit">
+            <article class="staff-audit-row" *ngFor="let event of vm.auditEvents">
+              <div class="staff-audit-main">
+                <strong>{{ vm.auditActionLabel(event.action) }}</strong>
+                <small>{{ vm.auditEntityLabel(event.entityType) }} &middot; {{ vm.time(event.createdAt) }}</small>
+              </div>
+              <p *ngIf="vm.auditSummary(event.details)">{{ vm.auditSummary(event.details) }}</p>
+            </article>
+          </div>
+          <ng-template #emptyAudit>
+            <div class="staff-empty-state">Los cambios que realices aparecer&aacute;n aqu&iacute;.</div>
+          </ng-template>
+        </section>
+      </div>
+    </div>
+  </fieldset>
+</section>

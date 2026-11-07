@@ -1,0 +1,356 @@
+{
+  "verifiedAt": "2026-11-07T14:32:05.533Z",
+  "environment": "Local Supabase CLI outside the web/API Compose stack",
+  "architecture": {
+    "checkedAt": "2026-11-07T14:28:58.016Z",
+    "projectReferences": {
+      "Domain": [],
+      "Application": [
+        "Domain"
+      ],
+      "Infrastructure": [
+        "Application",
+        "Domain"
+      ],
+      "Api": [
+        "Application",
+        "Infrastructure"
+      ]
+    },
+    "featureBranches": [
+      "access",
+      "catalog",
+      "catalog-admin",
+      "operations-admin",
+      "ordering",
+      "staff-orders",
+      "tracking"
+    ],
+    "lazyPages": 10,
+    "failures": []
+  },
+  "node": "v26.2.0",
+  "tests": [
+    {
+      "title": "order snapshots, COP totals, private receipt, UTC dates and audit persist",
+      "ok": true,
+      "durationMs": 349
+    },
+    {
+      "title": "sold out, inactive category and changed price reject stale carts",
+      "ok": true,
+      "durationMs": 153
+    },
+    {
+      "title": "last capacity is atomic under simultaneous requests and ASAP chooses next viable slot",
+      "ok": true,
+      "durationMs": 293
+    },
+    {
+      "title": "concurrent and repeated idempotency keys return one order, mismatched payload conflicts",
+      "ok": true,
+      "durationMs": 218
+    },
+    {
+      "title": "closed, paused, minimum notice, missing scheduled slot and dated exceptions are enforced",
+      "ok": true,
+      "durationMs": 111
+    },
+    {
+      "title": "privacy, JWT signature/issuer/audience/expiry and staff roles protect all surfaces",
+      "ok": true,
+      "durationMs": 426
+    },
+    {
+      "title": "status transition locking, code verification, delivery actor/time and cancellation capacity",
+      "ok": true,
+      "durationMs": 490
+    },
+    {
+      "title": "protected real Storage upload, public product image, MIME and size limits",
+      "ok": true,
+      "durationMs": 158
+    },
+    {
+      "title": "administration, schedule validation, overlapping capacity, reporting, pagination and audit",
+      "ok": true,
+      "durationMs": 334
+    },
+    {
+      "title": "administrator UI persists catalog, availability, photo, schedule and Bogotá pickup slots",
+      "ok": true,
+      "durationMs": 3997
+    },
+    {
+      "title": "staff invitation uses real local Auth and role changes revoke operation access",
+      "ok": true,
+      "durationMs": 195
+    },
+    {
+      "title": "real browser menu → cart → pickup → receipt, SignalR update and polling fallback",
+      "ok": true,
+      "durationMs": 34930
+    },
+    {
+      "title": "offline PWA shell blocks confirmation and refreshes catalog and slots on reconnect",
+      "ok": true,
+      "durationMs": 1174
+    },
+    {
+      "title": "responsive student and staff screens, keyboard focus, modal and WCAG 2.2 AA states",
+      "ok": true,
+      "durationMs": 18520
+    },
+    {
+      "title": "SignalR groups isolate customer orders and reject broadcasts to unknown staff",
+      "ok": true,
+      "durationMs": 434
+    },
+    {
+      "title": "leaving the operator queue cancels pending connection startup",
+      "ok": true,
+      "durationMs": 2827
+    },
+    {
+      "title": "leaving tracking cancels pending connection startup",
+      "ok": true,
+      "durationMs": 2572
+    },
+    {
+      "title": "public rate limit rejects excess traffic and cannot be bypassed through forwarded headers",
+      "ok": true,
+      "durationMs": 592
+    }
+  ],
+  "containers": [
+    {
+      "name": "uniflow-verification-api-1",
+      "image": "sha256:95ed46b2210368cae7be1cddc777e97f452b69b332ea79d421ddfc0df94b7712",
+      "state": "running",
+      "health": "healthy"
+    },
+    {
+      "name": "uniflow-verification-web-1",
+      "image": "sha256:5e01b14ce34e4b29a42d9e9db6ee2e502b78c9b747f6dde33c5f6023cf350546",
+      "state": "running",
+      "health": "healthy"
+    }
+  ],
+  "health": {
+    "status": "ok",
+    "service": "uniflow-api",
+    "database": "connected"
+  },
+  "migrations": [
+    "20261107074638_InitialCreate",
+    "20261107075102_CapacityRelease",
+    "20261107075342_EnableRowLevelSecurity",
+    "20261107080801_ProductIntegrity",
+    "20261107080831_AdminAuditEvents"
+  ],
+  "rowLevelSecurity": [
+    {
+      "tablename": "admin_audit_events",
+      "rowsecurity": true
+    },
+    {
+      "tablename": "business_settings",
+      "rowsecurity": true
+    },
+    {
+      "tablename": "categories",
+      "rowsecurity": true
+    },
+    {
+      "tablename": "opening_hours",
+      "rowsecurity": true
+    },
+    {
+      "tablename": "order_events",
+      "rowsecurity": true
+    },
+    {
+      "tablename": "order_items",
+      "rowsecurity": true
+    },
+    {
+      "tablename": "orders",
+      "rowsecurity": true
+    },
+    {
+      "tablename": "pickup_slots",
+      "rowsecurity": true
+    },
+    {
+      "tablename": "products",
+      "rowsecurity": true
+    },
+    {
+      "tablename": "staff_roles",
+      "rowsecurity": true
+    }
+  ],
+  "sourceSha256": {
+    ".env.example": "4e41f69fc1adc7e46f9d4807aa466409f2eb6d9bae8446d844a041bf93ae7e11",
+    "ARCHITECTURE.md": "6f024b3673ea46b84a9532b6beb55a8e69b455333ee167cc81a3cfb8cd527382",
+    "README.md": "1454384b1637af1de3d10f0f8af329baf99694d63489a53e097d58db6033be66",
+    "api/.dockerignore": "d93072c2b06c20328c7952808963606400f13bf607b88cdd7f55e5fb04094a1d",
+    "api/UniFlow.Api/.dockerignore": "6acb6da077af087eb3fc06ad5ed42567260c7b0242ed04e25df99f8ccbf2367c",
+    "api/UniFlow.Api/Dockerfile": "558883bd30d91119e083930072d471c4614b44569f5890f32f69204d1dd0af85",
+    "api/UniFlow.Api/Endpoints/CatalogAdministrationEndpoints.cs": "bda375f13da3cd837961e9053f44cc9ded03a280d593e5da6b6fb95c88f875d2",
+    "api/UniFlow.Api/Endpoints/CatalogEndpoints.cs": "3f1cd193b312bc5b32a584a8aace962d76f54ccf5cf1c738475850e8a02aeb62",
+    "api/UniFlow.Api/Endpoints/OperationsAdministrationEndpoints.cs": "bf49d58098310a766426a24899aff11d40c424c2067ed200713a578245b1b252",
+    "api/UniFlow.Api/Endpoints/OrderingEndpoints.cs": "d06873bb460d5ea3bf1e61872bc229c7de7b5aa8dd49dd1972238dd3414d3b2f",
+    "api/UniFlow.Api/Endpoints/ReportingEndpoints.cs": "f7748a89bdcb07d84a0aba32eddf7810774735c5139ff6aa7ca0d9e4419757f9",
+    "api/UniFlow.Api/Endpoints/StaffAccessEndpoints.cs": "4e3ec7f4e744ec4e9891e3b83cf2a559c0909d32fd1726d247b9fec2478a5bb6",
+    "api/UniFlow.Api/Endpoints/StaffAdministrationEndpoints.cs": "d927691266be2b0c3de6915c3921446a0d970adc5426bb700e2e97d799350389",
+    "api/UniFlow.Api/Endpoints/StaffOrderEndpoints.cs": "ed0afaca446db8dbc37f219c4e7c5111cf40d5687da6eef336076453cdf529d2",
+    "api/UniFlow.Api/Http/HttpCurrentUser.cs": "ff613c673b566aadda73c28411be1a59139d563b614d8c6be2a6f5086ef4a18b",
+    "api/UniFlow.Api/Http/UseCaseResultExtensions.cs": "869f5305c3cf332d47a4a7caae28b739bd79ec891a4159489eab5cea26c4d069",
+    "api/UniFlow.Api/Program.cs": "c9b168d207850e8b5334db89d96915df8f316b8910925636500ad2fbc4d9fcd7",
+    "api/UniFlow.Api/Properties/launchSettings.json": "9b3ca06bf7eb7f9f8cd515f3e2317b76f44696e72dfa47e3741ced671317b262",
+    "api/UniFlow.Api/Realtime/OrderHub.cs": "632e88b96cb0fa2c63ef3968f4d2475cf988a52b06e7215b3fdf6421e8f1ad6d",
+    "api/UniFlow.Api/Realtime/SignalROrderNotifier.cs": "4041df4b84cf4bf99014b833ac283cb8c4b6a6612cb1e94b10d363f152f5b079",
+    "api/UniFlow.Api/UniFlow.Api.csproj": "ceaf361f4d3323c74a65400e08f98470baa1c5e83c139f3be78f383d72afc2f0",
+    "api/UniFlow.Api/UniFlow.Api.http": "dc77010d37bf2e3b928b9a5b60818f4a54c4b64400c15e041fb00babb3a72802",
+    "api/UniFlow.Api/appsettings.Development.json": "73f95f9e0ceb205fc1c4dc50c07697fcfa29d7087868c2aef1d504cb38c771ec",
+    "api/UniFlow.Api/appsettings.json": "200332b434757a0054a3d356c91cde01f2c48712be8aa2bcb0f3e973619f06e3",
+    "api/UniFlow.Application/Abstractions/ExternalServices.cs": "4970f7c35576edd2278e62ff532144e19d7a47dda1d36e603d3eeaac972239fd",
+    "api/UniFlow.Application/Abstractions/Persistence.cs": "49c66c4fcb3c3380fd08d08f4d1405930796d7321e180e16ccc474228e2c4ab3",
+    "api/UniFlow.Application/Common/ApplicationRules.cs": "7720b4d2d8ed2cc0893b821600b72aa6cab052f8d17a5deef6451bd8a937142d",
+    "api/UniFlow.Application/Common/UseCaseResult.cs": "bbcd0835593bb28677c887b7e7f785974d19c69ed6ca23b868b6ab0f0467fd02",
+    "api/UniFlow.Application/Contracts/Requests.cs": "3555bc83d2371e36e320a8d9c66275efd0a6a6b02ce0ae77573f4e5514745690",
+    "api/UniFlow.Application/Features/CatalogAdministrationUseCases.cs": "dbbacecf103d6a7541c23514511cfe27bf619856456a3cebe8b372b6c6d69ce8",
+    "api/UniFlow.Application/Features/CatalogUseCases.cs": "0cb1da188c304742e9eff0e098470d8ae004e6ac51397ada98b2739582a3550e",
+    "api/UniFlow.Application/Features/OperationsAdministrationUseCases.cs": "06fae6e19be67f73a28b20539043264396b5b2e1d320f70b213c8b5520f5e2d1",
+    "api/UniFlow.Application/Features/OrderSubscriptions.cs": "ed9966bde26e1a285d0ea782518e43f3e6815e6ad8c37478fab988bd192d77bd",
+    "api/UniFlow.Application/Features/OrderingUseCases.cs": "33d9e77259263a665d8bd5f4fc6310040ef686a1eb2dca2cdf4f956539e3a968",
+    "api/UniFlow.Application/Features/ReportingUseCases.cs": "3b26eccffb1d3f091200aeea132cf6ce1922b1d5d92500d50bba659d4eea987d",
+    "api/UniFlow.Application/Features/StaffAccessUseCases.cs": "0a7dbc3e9b2694c63735a52617ce3eb431e0266a46730fcc89fc8a447fff46a9",
+    "api/UniFlow.Application/Features/StaffAdministrationUseCases.cs": "41949a611bfb5a70a5f5453d3bf0e8f264ff69d0e7753645fb7afe87882dd17a",
+    "api/UniFlow.Application/Features/StaffOrderUseCases.cs": "f3927a7e02a64a1a39c6c56376a22a9077a2625202dd8441322dda2b0508c7f2",
+    "api/UniFlow.Application/UniFlow.Application.csproj": "a9c71da073fb827d57e23252d274f4d8cf244b3ff2a7a7761be2b22444cb1791",
+    "api/UniFlow.Domain/Entities/AdminAuditEvent.cs": "43428b3c590d44993ad1b4746b8fa70c63fe8436a44344b48cdf4be0064d01b6",
+    "api/UniFlow.Domain/Entities/BusinessSettings.cs": "3db2eb9300da9c5d4731530eea737c669b3adfbbac194225d1a5f512f2a3ba99",
+    "api/UniFlow.Domain/Entities/Category.cs": "bcc931e0daa192a03ef08712262c2ec7e2648947c73ed236eb04bd22d0c02bd1",
+    "api/UniFlow.Domain/Entities/OpeningHour.cs": "a5c52562f9d5523dd70c615eb3c86940bb4eb25624f9fd1b243272771b412cbb",
+    "api/UniFlow.Domain/Entities/Order.cs": "9864a09d75a72e1b0c3d426bcfa2e70691d74d81c7ec75c2608f9666806aed4a",
+    "api/UniFlow.Domain/Entities/OrderEvent.cs": "a0991890acce57b7e103b17639804ddd012f071a0ef39b9dff72c860adb12eb1",
+    "api/UniFlow.Domain/Entities/OrderItem.cs": "3fdc3f91928a632c4cb3bdae4ec636cff0aaa20c728391c739cd552463b487f5",
+    "api/UniFlow.Domain/Entities/PickupSlot.cs": "8b041022765d7efccb9cf380fdc20b76d210d50b9c089490b5f837bcea5c9672",
+    "api/UniFlow.Domain/Entities/Product.cs": "3b33fde3016d56457e1acd8fac0a12a8d6ef27740213fa4adbf8f4c19b006d5f",
+    "api/UniFlow.Domain/Entities/StaffRole.cs": "e40e03d9bb2f4d7c7c88441e8a9e94fedffa8644025b093c405ff3abff02abc9",
+    "api/UniFlow.Domain/Orders/OrderLifecycle.cs": "785659cdcfb900fa0d377ecf5a16a4dd7e2434c75bbf09f0473fdcaca0d37f4e",
+    "api/UniFlow.Domain/UniFlow.Domain.csproj": "e1a91ad3b17614202de10e44136c7dbcc5e9cf97d5dea39cdae0418edeb2e8b9",
+    "api/UniFlow.Infrastructure/DependencyInjection.cs": "6f8dabac86d7fbe38f309a769f9b31fb9ac9710155758d74a86c07adce9d33b8",
+    "api/UniFlow.Infrastructure/Persistence/DatabaseInitializer.cs": "f0a0da5cd51ea0740b6ce8ce49749b192b1c9d69e11a4717969692a07686e0b5",
+    "api/UniFlow.Infrastructure/Persistence/EfApplicationStore.cs": "aab7219edcbbd75dc6a1ac6b20c0eb2146ab80323901e8a2a2c79cc565639adb",
+    "api/UniFlow.Infrastructure/Persistence/EfRepository.cs": "adfad90c413df641af5f7f04668e5ab043feeae53ad3eaac17d5d5b591135619",
+    "api/UniFlow.Infrastructure/Persistence/Migrations/20261107074638_InitialCreate.Designer.cs": "be3174573f96b1e1f83e2fcf4fb0bd4a518c08f9391b81087e082091e1cf05c5",
+    "api/UniFlow.Infrastructure/Persistence/Migrations/20261107074638_InitialCreate.cs": "e62ef329d69c56babea5bb61be89a8f906e960f6684176647edba3d651164fa1",
+    "api/UniFlow.Infrastructure/Persistence/Migrations/20261107075102_CapacityRelease.Designer.cs": "025e15b505a5c310228ab9b9605102d5954f81dd7ad626b4f1353b66b0b6b1c6",
+    "api/UniFlow.Infrastructure/Persistence/Migrations/20261107075102_CapacityRelease.cs": "8f0de59752454e632654aa32a076e39400d2f591c01aee2b233b8fbc7a09b5e5",
+    "api/UniFlow.Infrastructure/Persistence/Migrations/20261107075342_EnableRowLevelSecurity.Designer.cs": "3f8c631f9304e13ca287cf6b339668be2406611fc606f0925daabad110ad214d",
+    "api/UniFlow.Infrastructure/Persistence/Migrations/20261107075342_EnableRowLevelSecurity.cs": "3c2146f60e2a5868dcf683c600de6add2e1bb620c79af5815b0269d3da10a963",
+    "api/UniFlow.Infrastructure/Persistence/Migrations/20261107080801_ProductIntegrity.Designer.cs": "0464094f3aa52eafa4d2c64a461c18cd53a7538b8813e9bdda7787200ed52003",
+    "api/UniFlow.Infrastructure/Persistence/Migrations/20261107080801_ProductIntegrity.cs": "052d5f9031cc8a2800f7ab24526144f3b652e59b541579db3a4fbbda300f0f7c",
+    "api/UniFlow.Infrastructure/Persistence/Migrations/20261107080831_AdminAuditEvents.Designer.cs": "0cc8d33b18825c065c4316ff261111fb6eda9985376a3ebce72157f6f042a4b8",
+    "api/UniFlow.Infrastructure/Persistence/Migrations/20261107080831_AdminAuditEvents.cs": "488b04471569fc1cc6147515dd049daa0caeaef2775bf86db879c8316ef5acb8",
+    "api/UniFlow.Infrastructure/Persistence/Migrations/UniFlowDbContextModelSnapshot.cs": "1834d20109a2a515408065da597750599c104da63ecaaf834381d9bd9d04dd7d",
+    "api/UniFlow.Infrastructure/Persistence/UniFlowDbContext.cs": "873e33100d6b3d41fed8aefd9500ecd33f02bedc40f8e7ce2e9024d2cba85040",
+    "api/UniFlow.Infrastructure/Persistence/UniFlowDbContextFactory.cs": "967c4cfefadd95665ef7d4aa432c218720f67fb4c62ac91b99174e7203badcb5",
+    "api/UniFlow.Infrastructure/Supabase/SupabaseAdmin.cs": "4db6340ca24bd9990f6905ab162d54ae66bb0323154d7c3b6471bb1b6a79a3dd",
+    "api/UniFlow.Infrastructure/Supabase/SupabaseSigningKeysRetriever.cs": "6ce1d6da0037d56e1348faa390287fe016f657c2def0cad61e2b56aedf431f17",
+    "api/UniFlow.Infrastructure/Supabase/SupabaseStorage.cs": "a46f7059fcd9f8bca6131fca7cd29945657cd8fc5ef29e4d57317a50bc86c265",
+    "api/UniFlow.Infrastructure/UniFlow.Infrastructure.csproj": "bae612345505220d66e87de4778b40d0fb29878e70af8e950629a58e736a00a2",
+    "api/UniFlow.sln": "cfdac3130fa8c2a5e25555182bfe193eb8f82d1d5448a7e037ef020a3e3dd25d",
+    "docker-compose.yml": "856b775f558e3240ef30b363111c97a154e8cd198905ca686c8254299b637e55",
+    "openspec/changes/uniflow-mvp/design.md": "5f8bbf67ce4af8b8f2a1c23fc8b45db3dfff78c9c1dbae597e345380c06a9b87",
+    "openspec/changes/uniflow-mvp/proposal.md": "d229730ae62a11d1d816d742f2f9a72fe422042be9b5a69f1f97275209f215f4",
+    "openspec/changes/uniflow-mvp/tasks.md": "aafdcb94f5e6d554442e760e47c80d0e4385df52f9a82b1534e21b9f1340f6d3",
+    "verification/README.md": "dd1183d9d0a570c489be8ccbd573133ec91abdeef97a67e4c752d7e3d4cb223d",
+    "verification/check-architecture.mjs": "a64ebac69ba74d17174c24d2668e1a3bd16d0498eea9f3b5f9cf2a999ee185ff",
+    "verification/compose.yml": "2fa554a374e3593998b6f6085d1cef703ca84536a8583f2be3aac29ce1ef7ddf",
+    "verification/fixtures.mjs": "aaf7b92d2c8913108f3552219cfa654c1f072715e34d481509a2170c555d4bf9",
+    "verification/package-lock.json": "f1507bb2897f23b98c35f4cd2cf08f5b6af8ee2348b358578043e436c8c6f708",
+    "verification/package.json": "0846c504c52027185d16ed7115acfabdc45c1be3664e59108807544ab310c0c7",
+    "verification/playwright.config.mjs": "5485877d3b19b505f30d15cc26161fe45462a013aefbc46a0e84fbc95a7a04e9",
+    "verification/prepare.mjs": "3c8dc14054eb596d24fb8029d433e66e1486e4578b7643034bc3c8076223601c",
+    "verification/report.mjs": "23234c1fcfeb5a28c937e4990d7ac50c50b4d764f39a2189c336a0712709be3d",
+    "verification/supabase/config.toml": "b7a2ab0d9d5de292b57fa036def9cdb14a82f41bae561900db3664a362063c50",
+    "verification/tests/acceptance.spec.mjs": "b44eb93e32155cb1ce8a13d16dd42336a37d4cb2afb72b877f09e7d8fd5adcd9",
+    "web/Dockerfile": "06e77e05daf65705d390ad8f536d853378583ed881191565893af12cd7d81c2c",
+    "web/README.md": "3c4b9054839b944ca939835bdd63ac8152effceb22b3adf98fc71be29cd54dd1",
+    "web/config.template.js": "554546bdfa8052744853d797a6ddbb13023c7b8adbedb4bb777cdc9504103f1a",
+    "web/docker-entrypoint.sh": "456329d190ea902e53b0a44411f4ca9a07c22d1dfe54ec2b4cf447c46c8eb19f",
+    "web/nginx.conf": "b05c127058b2917527bc18b78c9a324d07dae4cf449f69bc3a480f16f6f3e226",
+    "web/package-lock.json": "a82f3faf615e6b7b58b9d0436f3c95e0d0634c51053f332226cf2ff56788bafd",
+    "web/package.json": "cd4709d9343d919283af926bf73fa02878244b95ee4eebbefe78a6e8293456e5",
+    "web/public/config.js": "dbd13bb8044035f853897887ac9bb6d1b5f0eb850c0368dbc2c5dabcf563a573",
+    "web/public/favicon.ico": "f9102be80297c0529207607be5277b4f90bca89d65988fa1771b91c7894e815f",
+    "web/public/manifest.webmanifest": "c915fadeb4beca26e081444cb311e03d3c8c8c2b92a38838c390f6e42f81c31d",
+    "web/public/sw.js": "58c12d823d892d7922fda1dc99492e43db8f591262ef286640423ebcd05eb9b8",
+    "web/public/uniflow.svg": "ce29e840acf3d8859237dc244ae071e8ee8d620d8a073f6fa45eca8e920b3c53",
+    "web/src/app/app.config.ts": "7b23203c2913e6fd663151cdbc0021dc58788a57baa129e0f1e4888c106a8a9e",
+    "web/src/app/app.routes.ts": "532bd2f5cff2faabe2f21da95f97ec98f7d6acd955b78eda5f99f918922952b0",
+    "web/src/app/app.ts": "488960cf558bc5448e7cc3aa995dc4ecf5dbfaf2191e8959764f9c4c62371398",
+    "web/src/app/core/auth/auth.service.ts": "cd4bf7ba766d6ed6caff1b128cbc1a259de664958b64835044b3d0b7195b0802",
+    "web/src/app/core/config/runtime-config.ts": "c666484124a4b1e52bea83cb86c7cc952057ff672ddb2b590dcd850c31cfd11f",
+    "web/src/app/core/connectivity/connectivity.service.ts": "e131a0bfed8bd25e99f20b009945f23d2ec287a8282cb64e7352e619414edcc3",
+    "web/src/app/core/http/api.service.ts": "5312dd7a7da0cb37dda3eebd40b5d11fedf6a9a52439c649e36e7cbd3045ab97",
+    "web/src/app/core/http/auth.interceptor.ts": "f0fc2f273457b2451eeb9e38d2858fc30ef98aec7c21dd07156ed30c3460a549",
+    "web/src/app/core/navigation/page-paths.ts": "a8f3d878467fbcc4aed6e18de54cfe5b3b2604f59b1f7aefb609c5387f17c824",
+    "web/src/app/core/state/feature-store.ts": "62d0ef41c0e7564eb446d43e4afdc49a6f99525a29d7fc4b5b7fece1f8565a86",
+    "web/src/app/core/state/ui-state.service.ts": "49ef6f17401a6e3a83ceaab9e831fd026a9bae8ebcd1e774c3c1fe4d54361ca1",
+    "web/src/app/features/access/data-access/staff-session.store.ts": "28de8ef8b5bee346b349aeb1eeecbf0b85d993501ea3c0b8be8d37e0902c7ba1",
+    "web/src/app/features/access/guards/staff.guard.ts": "65bd3aba4c0407861d0f9acbeeba9b4ca7d50467e55b9311bc6e602402b4bcf3",
+    "web/src/app/features/access/index.ts": "aa2fb8ee5dfe0764388d024342044c799c9dbf7849c3f2161d866422f727dc8d",
+    "web/src/app/features/access/pages/login-page.component.html": "f9157404f47a7869337da37659338b8ea06bba48467c2c5c985a0bf84178ae02",
+    "web/src/app/features/access/pages/login-page.component.ts": "9c9fc82559688fdc2b9e7f4147f3901208573cf353007be0dcf5edc51b6e7f39",
+    "web/src/app/features/catalog-admin/data-access/catalog-admin.store.ts": "2ae5354dfe8b708e4640ded8303f444bbd7ad46182566efce1b3752274c465b6",
+    "web/src/app/features/catalog-admin/index.ts": "7a5624eee7db6ba14897a309bae851b8c621c73c67e5413ec78d937574d50e6a",
+    "web/src/app/features/catalog-admin/pages/catalog-admin-page.component.html": "5c261a03e980ba13dea780d09669549bce13994250c9dea1eb64911d0c6ab748",
+    "web/src/app/features/catalog-admin/pages/catalog-admin-page.component.ts": "42d27e35835a3e37d9201af7a09bacae4e64356d4657e3473657582f98042603",
+    "web/src/app/features/catalog/components/product-card.component.html": "12c2a06994440e5860c2733b1f2f2f133635ae415571ccd09ba7f568e33d3716",
+    "web/src/app/features/catalog/components/product-card.component.ts": "dc8ea9c85e8f3b2ed2164ffc28994f7ef693288a4e75a01d432c58e61a1743e0",
+    "web/src/app/features/catalog/data-access/catalog.store.ts": "fcbb770caf6a241d3760bcfea9c9cc06ae2bb065a6e0f82058a7d2b4b7d84731",
+    "web/src/app/features/catalog/index.ts": "82d396cd530d3410f3338d85d35d31b21e91e8ebf494e138fb9efd6f784f0e8a",
+    "web/src/app/features/catalog/pages/menu-page.component.html": "6b270d3a6b0144c4d1f6a6d61c737476a8f20b9f811ab9c77d0b150411c591b9",
+    "web/src/app/features/catalog/pages/menu-page.component.ts": "58c2ee5e89239fb2dfa8036be1e733d8dedbe20af325d5fedb3573f25c82b310",
+    "web/src/app/features/operations-admin/data-access/operations-admin.store.ts": "0e4af5bebd062f761659c9964f1a4800d551997e7a83ed1002e4e76b0a76970f",
+    "web/src/app/features/operations-admin/index.ts": "1a13c02f0314cc2526bf1b766db8b444ef48643d011f3345949b85cde2aee773",
+    "web/src/app/features/operations-admin/pages/operations-admin-page.component.html": "a2b1f0121641c00d5e8a85d151f955f907f4ea6ee7b0774f7492e60a866a0ae5",
+    "web/src/app/features/operations-admin/pages/operations-admin-page.component.ts": "dc4edc08737d3f66b660a0371d289d1b0580dd43d2e3da412fe6f0dce2133fc2",
+    "web/src/app/features/ordering/components/cart-summary.component.html": "0719e2d1367f5820ae9536ea8b3c03e2c3223e99de059b040eba86cd5da79d52",
+    "web/src/app/features/ordering/components/cart-summary.component.ts": "55c624a2054e4f06a884f6d5c8fcea12e8504955f9d70071ea1bb5001b4eeb7e",
+    "web/src/app/features/ordering/data-access/ordering.store.ts": "77e52f8a11ac9359310bd2e7851bc0ba3b0dbb7a3609713afa004331981e4612",
+    "web/src/app/features/ordering/index.ts": "69cdd9e7da9d91cf2f67d455310a93531e7b0a1ba2ad7803fa55eb3d644ad15d",
+    "web/src/app/features/ordering/pages/cart-page.component.html": "24c1a89a46f604748f7e4fb1add08c36563d6b3b99c54855d82fb870e49a702f",
+    "web/src/app/features/ordering/pages/cart-page.component.ts": "e307c680ff9795ed325a51f9bd903a1510abb3e0979db1eef811bfd1b8cbb714",
+    "web/src/app/features/ordering/pages/checkout-page.component.html": "24c1a89a46f604748f7e4fb1add08c36563d6b3b99c54855d82fb870e49a702f",
+    "web/src/app/features/ordering/pages/checkout-page.component.ts": "7ce03cdf568dd7f53b3dec7abb611fe87f2b007eafa4e8f324e04977296a263d",
+    "web/src/app/features/ordering/pages/receipt-page.component.html": "3908d9c9d33c40f7bb5996047c79a5d0ff57d8b80dc3ed60c57c3346f6a40df0",
+    "web/src/app/features/ordering/pages/receipt-page.component.ts": "cddf27ccdaffc8e50cb524c4002425b1dd30b91d529c87aec97a2b1580755ba5",
+    "web/src/app/features/staff-orders/components/order-detail-dialog.component.html": "7051d829b76fc37512568c1b67296610e2ea760cf6e2a53c1110147906f6a005",
+    "web/src/app/features/staff-orders/components/order-detail-dialog.component.ts": "d3b8ba88c2105bcd5d0956fa5d39a1451ac621f8cfd386be13ab4579a3988aed",
+    "web/src/app/features/staff-orders/data-access/staff-orders.store.ts": "7df3a46f437580aa6c6db5245ef2d5020891f46eb6f687f951604196f304ad93",
+    "web/src/app/features/staff-orders/index.ts": "9057a69e89080b80f93ea3ea219a23f46b50969b4533dfa2bc053912df44f47d",
+    "web/src/app/features/staff-orders/pages/history-page.component.html": "f8fef4d1386e831a777637c2d58f1c72a7c81f8400b87b3e5405ce02f4308028",
+    "web/src/app/features/staff-orders/pages/history-page.component.ts": "b4c39bdc276d477eff595cc7c6c1f00660a91dba89f2907a19925a25d670098a",
+    "web/src/app/features/staff-orders/pages/queue-page.component.html": "95eb0c8d95c7df8bbc80fe7e836dff01871a7307b315495ed6ab73d1edc7e80b",
+    "web/src/app/features/staff-orders/pages/queue-page.component.ts": "5c1c2b86d81a4e866376d48037656061f1df04c6c12074bcb11c60717b9f1fa7",
+    "web/src/app/features/tracking/data-access/tracking.store.ts": "c98a906c823a05955d292cf937dfdfa20608505fa7bd491017328c716c8c9094",
+    "web/src/app/features/tracking/index.ts": "2a359f0ee954f92f6698289a9919eb3babdb691cbea7d60c78123ee1076b9414",
+    "web/src/app/features/tracking/pages/tracking-page.component.html": "cedbafeb63957c902a8fa8ae07aceea81ba02e7375c711468d60ba9a50fdd14c",
+    "web/src/app/features/tracking/pages/tracking-page.component.ts": "a4f71b078008f4229b10a7eb8835259c68d82e2ed62737237114dd238ec380d4",
+    "web/src/app/layout/app-shell.component.html": "5e1660b1463b1499d81b8928a18c87943a0abeaf6ec21b969b4881f6c642d909",
+    "web/src/app/layout/app-shell.component.ts": "9d55e661aecd21ab826fe8a8574ae7ca77f349d70b7f38f47a071d1cc7657ac0",
+    "web/src/app/shared/models/catalog.models.ts": "f55af78cbaba81e6d263b78fef02ec1ca731bf72f1fe8fc47de12b050389b000",
+    "web/src/app/shared/models/index.ts": "4b97c790e5a4ce0150283c06805691b038cb95249b21114bbda8fb86823aebca",
+    "web/src/app/shared/models/order.models.ts": "8f0399eb2bf13e2dd871bda8baf0ddd8b065e2ea3ccc133e078b708670d89177",
+    "web/src/app/shared/presentation/display-formats.ts": "8b6875e4925359e485cbb3ba2834808b004fdb61209f95f54237591873a883f2",
+    "web/src/index.html": "f3decfbe17122b6cb87c1216a841bf77277e63f688d2127bd7d00af0e975068f",
+    "web/src/main.ts": "ecc610fb7d56c95a01a8aa6c274a63210d45b2944dd6b9a88b2c8f70b6351037",
+    "web/src/styles.scss": "cff4962251cbddb720d024d869b6d26093872fd60a1d5bd05ab157c0ab1c9a38"
+  }
+}

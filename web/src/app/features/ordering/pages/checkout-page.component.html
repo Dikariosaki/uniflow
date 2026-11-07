@@ -1,0 +1,82 @@
+<section class="checkout-column">
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">TU PEDIDO</span>
+      <h1>{{ vm.page === 'checkout' ? 'Confirma y recoge' : 'Tu selección' }}</h1>
+    </div>
+    <button class="text-button" (click)="vm.go('menu')"><span class="material-symbol" aria-hidden="true">arrow_back</span> Seguir explorando</button>
+  </div>
+  <app-cart-summary />
+  <section class="panel-card form-card" *ngIf="vm.page === 'checkout' && vm.cart.length">
+    <h2>¿A nombre de quién?</h2>
+    <div class="form-grid">
+      <label
+        >Nombre o alias<input
+          [(ngModel)]="vm.alias"
+          placeholder="Ej. Ana"
+          autocomplete="name" /></label
+      ><label
+        >Teléfono<input
+          [(ngModel)]="vm.phone"
+          placeholder="300 123 4567"
+          type="tel"
+          autocomplete="tel"
+      /></label>
+    </div>
+    <h2>¿Cuándo lo recoges?</h2>
+    <div class="pickup-options">
+      <button [class.selected]="vm.selectedMode === 'ready'" (click)="vm.selectedMode = 'ready'">
+        <span class="option-icon material-symbol" aria-hidden="true">bolt</span><strong>Lo antes posible</strong
+        ><small>Te asignamos el primer espacio disponible</small></button
+      ><button
+        [class.selected]="vm.selectedMode === 'scheduled'"
+        (click)="vm.selectedMode = 'scheduled'"
+      >
+        <span class="option-icon material-symbol" aria-hidden="true">schedule</span><strong>Elegir horario</strong
+        ><small>Escoge una franja disponible</small>
+      </button>
+    </div>
+    <div class="slot-list" *ngIf="vm.selectedMode === 'scheduled'">
+      <button
+        *ngFor="let slot of vm.slots"
+        [disabled]="slot.available <= 0"
+        [class.selected]="vm.selectedSlot === slot.id"
+        (click)="vm.selectedSlot = slot.id"
+      >
+        <span>{{ vm.time(slot.startsAt) }} – {{ vm.time(slot.endsAt) }}</span
+        ><small>{{ slot.available }} cupos</small>
+      </button>
+      <p *ngIf="!vm.slots.length">No hay franjas publicadas para hoy.</p>
+    </div>
+    <div class="checkout-footnote">
+      El pago se realiza en la cafetería al recoger. La hora es una estimación basada en los cupos
+      actuales. Usamos tu alias y teléfono para identificar este pedido; no enviamos mensajes
+      automáticos.
+    </div>
+    <button
+      class="button button-primary confirm-button"
+      [disabled]="
+        vm.isBusy ||
+        vm.isRefreshing ||
+        !vm.catalogFresh ||
+        !vm.slotsFresh ||
+        !vm.cart.length ||
+        vm.cartHasUnavailable ||
+        vm.reservationExpired ||
+        vm.isReserving ||
+        !vm.isOnline
+      "
+      (click)="vm.submitOrder()"
+    >
+      {{ vm.isBusy ? 'Confirmando…' : 'Confirmar pedido · ' + vm.money(vm.cartTotal) }}
+      <span class="material-symbol" aria-hidden="true">arrow_forward</span>
+    </button>
+  </section>
+  <button
+    class="button button-primary continue-button"
+    *ngIf="vm.page === 'cart' && vm.cart.length"
+    (click)="vm.go('checkout')"
+  >
+    Elegir recogida <span class="material-symbol" aria-hidden="true">arrow_forward</span>
+  </button>
+</section>

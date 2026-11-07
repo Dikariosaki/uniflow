@@ -1,0 +1,12 @@
+{
+  "name": "UniFlow · Cafetería universitaria",
+  "short_name": "UniFlow",
+  "description": "Pide con anticipación y recoge en la cafetería de la Universidad Libre.",
+  "lang": "es-CO",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f8f9fd",
+  "theme_color": "#4338ca",
+  "icons": [{ "src": "/uniflow.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

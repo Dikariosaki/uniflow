@@ -1,0 +1,21 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "supabase:start": "supabase start --exclude studio,postgres-meta,realtime,imgproxy,edge-runtime,logflare,vector,supavisor",
+    "supabase:stop": "supabase stop",
+    "prepare:local": "node prepare.mjs",
+    "test": "node check-architecture.mjs && npm run check:backend && node prepare-api.mjs && playwright test",
+    "check:backend": "dotnet run --project backend-checks/BackendChecks.csproj",
+    "check:architecture": "node check-architecture.mjs",
+    "check:sql": "node check-supabase-sql.mjs",
+    "report": "node report.mjs"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@microsoft/signalr": "10.0.11",
+    "@playwright/test": "1.65.0",
+    "pg": "8.23.1",
+    "supabase": "3.0.0"
+  }
+}

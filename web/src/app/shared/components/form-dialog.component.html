@@ -1,0 +1,65 @@
+<div class="form-dialog-backdrop" *ngIf="config" (click)="backdropClick($event)">
+  <section class="form-dialog panel-card" role="dialog" aria-modal="true" [attr.aria-label]="config.title">
+    <header class="form-dialog-header">
+      <div>
+        <span class="eyebrow">UNIFLOW · CONFIRMACIÓN</span>
+        <h2>{{ config.title }}</h2>
+        <p *ngIf="config.description">{{ config.description }}</p>
+      </div>
+      <button class="form-dialog-close" type="button" aria-label="Cerrar" [disabled]="saving" (click)="cancel()"><span class="material-symbol" aria-hidden="true">close</span></button>
+    </header>
+    <div class="form-dialog-server-error" *ngIf="errorMessage" role="alert" aria-live="assertive">
+      <strong>No se pudo completar</strong>
+      <span>{{ errorMessage }}</span>
+    </div>
+    <form novalidate (ngSubmit)="submit()">
+      <div class="form-dialog-fields">
+        <label class="form-dialog-field" *ngFor="let field of config.fields; let first = first">
+          <span>{{ field.label }}</span>
+          <textarea
+            *ngIf="field.type === 'textarea'; else standardInput"
+            [(ngModel)]="values[field.key]"
+            (ngModelChange)="clearServerError()"
+            [name]="field.key"
+            [placeholder]="field.placeholder ?? ''"
+            [attr.maxlength]="field.maxLength ?? null"
+            [attr.aria-required]="field.required ? 'true' : null"
+            [attr.aria-invalid]="errors[field.key] ? 'true' : 'false'"
+            [attr.aria-describedby]="errors[field.key] ? field.key + '-error' : null"
+            rows="4"
+            [disabled]="saving"
+            [autofocus]="first"
+          ></textarea>
+          <ng-template #standardInput>
+            <input
+              [(ngModel)]="values[field.key]"
+              (ngModelChange)="clearServerError()"
+              [name]="field.key"
+              [type]="field.type"
+              [placeholder]="field.placeholder ?? ''"
+              [attr.min]="field.min ?? null"
+              [attr.max]="field.max ?? null"
+              [attr.step]="field.step ?? null"
+              [attr.minlength]="field.minLength ?? null"
+              [attr.maxlength]="field.maxLength ?? null"
+              [attr.aria-required]="field.required ? 'true' : null"
+              [attr.aria-invalid]="errors[field.key] ? 'true' : 'false'"
+              [attr.aria-describedby]="errors[field.key] ? field.key + '-error' : null"
+              [disabled]="saving"
+              [autofocus]="first"
+            />
+          </ng-template>
+          <small class="form-dialog-error" *ngIf="errors[field.key]" [id]="field.key + '-error'">
+            {{ errors[field.key] }}
+          </small>
+        </label>
+      </div>
+      <footer class="form-dialog-actions">
+        <button class="button button-outline" type="button" [disabled]="saving" (click)="cancel()">Cancelar</button>
+        <button class="button button-primary" type="submit" [disabled]="saving">
+          {{ saving ? 'Guardando…' : config.confirmLabel ?? 'Guardar cambios' }}
+        </button>
+      </footer>
+    </form>
+  </section>
+</div>

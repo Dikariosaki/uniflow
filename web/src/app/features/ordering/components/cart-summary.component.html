@@ -1,0 +1,55 @@
+<div class="panel-card cart-card" *ngIf="vm.cart.length; else emptyCart">
+  <div class="cart-reservation-note expired" *ngIf="vm.reservationExpired" role="alert">
+    <div><strong>La reserva venció</strong><span>El inventario se liberó. Resérvalo nuevamente para confirmar tu pedido.</span></div>
+    <button class="button button-primary" [disabled]="vm.isReserving || !vm.isOnline" (click)="vm.renewCartReservation()">
+      {{ vm.isReserving ? 'Reservando…' : 'Volver a reservar' }}
+    </button>
+  </div>
+  <div class="cart-reservation-note" *ngIf="vm.isReserving" aria-live="polite">
+    <span>Confirmando las unidades del carrito…</span>
+  </div>
+  <div class="cart-reservation-note" *ngIf="!vm.isReserving && !vm.reservationExpired && vm.reservationExpiresAt" aria-live="polite">
+    <span>Inventario reservado hasta</span><strong>{{ vm.time(vm.reservationExpiresAt) }}</strong>
+  </div>
+  <article class="cart-line" *ngFor="let line of vm.cart">
+    <div class="cart-thumb">
+      <img
+        *ngIf="hasImage(line.product.id, line.product.imageUrl)"
+        [src]="line.product.imageUrl!"
+        [alt]="line.product.name"
+        loading="lazy"
+        (error)="onImageError(line.product.id)"
+      />
+      <span *ngIf="!hasImage(line.product.id, line.product.imageUrl)" class="material-symbol" aria-hidden="true">{{ line.product.categoryName.toLowerCase().includes('beb') ? 'local_cafe' : 'restaurant' }}</span>
+    </div>
+    <div class="cart-product">
+      <strong>{{ line.product.name }}</strong>
+      <small class="cart-unit-price">{{ vm.money(line.product.priceCop) }} precio unitario</small>
+    </div>
+    <div class="quantity-control">
+      <button [disabled]="vm.isReserving" (click)="vm.changeQuantity(line.product.id, -1)" aria-label="Quitar uno"><span class="material-symbol" aria-hidden="true">remove</span></button
+      ><span>{{ line.quantity }}</span
+      ><button [disabled]="vm.isReserving" (click)="vm.changeQuantity(line.product.id, 1)" aria-label="Agregar uno"><span class="material-symbol" aria-hidden="true">add</span></button>
+    </div>
+    <div class="line-total" aria-label="Cálculo del subtotal">
+      <small>{{ line.quantity }} × {{ vm.money(line.product.priceCop) }}</small>
+      <strong>= {{ vm.money(line.product.priceCop * line.quantity) }}</strong>
+    </div>
+  </article>
+  <div class="subtotal-row">
+    <span>Productos · {{ vm.cartCount }} unidades</span><strong>{{ vm.money(vm.cartTotal) }}</strong>
+  </div>
+  <div class="subtotal-row muted"><span>Cálculo</span><span>Suma de los subtotales</span></div>
+  <div class="total-row">
+    <div><strong>Total a pagar</strong><small>Sin cargos adicionales · pago en cafetería</small></div>
+    <strong>{{ vm.money(vm.cartTotal) }}</strong>
+  </div>
+</div>
+<ng-template #emptyCart
+  ><div class="empty-state compact">
+    <span class="material-symbol" aria-hidden="true">shopping_bag</span>
+    <h3>Tu carrito está esperando</h3>
+    <p>Agrega algo rico del menú para continuar.</p>
+    <button class="button button-primary" (click)="vm.go('menu')">Ver menú</button>
+  </div></ng-template
+>

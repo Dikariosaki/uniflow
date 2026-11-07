@@ -1,0 +1,36 @@
+<dialog
+  #orderDialog
+  class="order-detail-modal panel-card"
+  aria-labelledby="order-detail-title"
+  (cancel)="close()"
+  (keydown.tab)="keepDialogFocus($event)"
+>
+  <button class="modal-close" (click)="close()" aria-label="Cerrar detalle" autofocus><span class="material-symbol" aria-hidden="true">close</span></button>
+  <span class="eyebrow">DETALLE DEL PEDIDO</span>
+  <h2 id="order-detail-title">Pedido #{{ orderNumber(order.id) }} · {{ order.customerAlias }}</h2>
+  <p>
+    {{ order.customerPhone }} · Recogida {{ time(order.slot) }} ·
+    {{ statusLabel(order.status) }}
+  </p>
+  <h3>Productos</h3>
+  <div class="detail-row price-breakdown-row" *ngFor="let item of order.items">
+    <div class="price-breakdown-copy">
+      <strong>{{ item.nameSnapshot }}</strong>
+      <small>{{ item.quantity }} × {{ money(item.unitPriceCop ?? 0) }} por unidad</small>
+    </div>
+    <strong class="price-breakdown-amount">{{ money(item.subtotalCop ?? (item.unitPriceCop ?? 0) * item.quantity) }}</strong>
+  </div>
+  <div class="order-total-row staff-order-total">
+    <div><span>Total del pedido</span><small>Suma de los subtotales</small></div>
+    <strong>{{ money(order.totalCop) }}</strong>
+  </div>
+  <h3>Bitácora</h3>
+  <div class="event-row" *ngFor="let event of order.events">
+    <i></i>
+    <div>
+      <strong>{{ statusLabel(event.newStatus) }}</strong
+      ><small>{{ time(event.createdAt) }} · {{ event.actorLabel || 'Sistema' }}</small
+      ><small *ngIf="event.reason">Motivo: {{ event.reason }}</small>
+    </div>
+  </div>
+</dialog>

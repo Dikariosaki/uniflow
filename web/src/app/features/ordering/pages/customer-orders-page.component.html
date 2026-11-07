@@ -1,0 +1,59 @@
+<section class="customer-orders-page">
+  <header class="customer-orders-heading">
+    <div>
+      <span class="eyebrow">TU CUENTA EN ESTE DISPOSITIVO</span>
+      <h1>Mis pedidos</h1>
+      <p>Guardamos aquí tus pedidos de los últimos 7 días en este navegador.</p>
+    </div>
+    <div class="customer-orders-actions">
+      <span class="orders-sync-status" *ngIf="!vm.isOnline">Sin conexión · mostrando pedidos guardados</span>
+      <button class="button button-outline" [disabled]="vm.isLoading || !vm.isOnline" (click)="vm.refreshOrders()">
+        {{ vm.isLoading ? 'Actualizando…' : 'Actualizar' }}
+      </button>
+    </div>
+  </header>
+
+  <div class="customer-orders-list" *ngIf="vm.orders.length; else noCustomerOrders">
+    <article class="customer-order-card panel-card" *ngFor="let order of vm.orders">
+      <div class="customer-order-topline">
+        <div>
+          <span class="eyebrow">PEDIDO #{{ vm.orderNumber(order.id) }}</span>
+          <h2>{{ order.customerAlias }}</h2>
+        </div>
+        <span class="customer-order-status" [class]="'customer-order-status ' + vm.statusClass(order.status)">
+          {{ vm.statusLabel(order.status) }}
+        </span>
+      </div>
+      <div class="customer-order-meta">
+        <span>{{ vm.dateLabel(order.createdAt) }}</span>
+        <span>Recogida {{ vm.time(order.slot) }}</span>
+        <span class="customer-order-pickup">Código de recogida: <strong>{{ order.pickupCode }}</strong></span>
+      </div>
+      <div class="customer-order-items">
+        <div class="price-breakdown-row" *ngFor="let item of order.items">
+          <div class="price-breakdown-copy">
+            <strong>{{ item.nameSnapshot }}</strong>
+            <small>{{ item.quantity }} × {{ vm.money(item.unitPriceCop ?? 0) }} por unidad</small>
+          </div>
+          <strong class="price-breakdown-amount">{{ vm.money(item.subtotalCop ?? (item.unitPriceCop ?? 0) * item.quantity) }}</strong>
+        </div>
+      </div>
+      <div class="customer-order-bottom">
+        <div class="order-total-label"><span>Total del pedido</span><small>Suma de los subtotales</small></div>
+        <strong>{{ vm.money(order.totalCop) }}</strong>
+        <button class="button button-primary" (click)="vm.openTracking(order)">
+          {{ ['CONFIRMADO', 'EN_PREPARACION', 'LISTO'].includes(order.status) ? 'Ver seguimiento' : 'Ver pedido' }}
+        </button>
+      </div>
+    </article>
+  </div>
+
+  <ng-template #noCustomerOrders>
+    <div class="customer-orders-empty panel-card">
+      <span class="material-symbol" aria-hidden="true">history</span>
+      <h2>Aún no tienes pedidos guardados</h2>
+      <p>Cuando confirmes un pedido, aparecerá aquí durante los siguientes 7 días.</p>
+      <button class="button button-primary" (click)="vm.go('menu')">Ir al menú</button>
+    </div>
+  </ng-template>
+</section>

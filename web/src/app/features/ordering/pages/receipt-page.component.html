@@ -1,0 +1,16 @@
+<section *ngIf="vm.order" class="track-view">
+  <div class="track-card panel-card">
+    <div class="track-status-icon ready"><span class="material-symbol" aria-hidden="true">check_circle</span></div>
+    <span class="eyebrow">PEDIDO #{{ vm.orderNumber(vm.order.id) }} · CONFIRMADO</span>
+    <h1>¡Listo, {{ vm.alias }}!</h1>
+    <p>Presenta este código al recoger tu pedido.</p>
+    <div class="pickup-code">
+      <small>CÓDIGO DE RECOGIDA</small><strong>{{ vm.order.pickupCode }}</strong>
+    </div>
+    <p>
+      Este pedido queda guardado en Mis pedidos durante 7 días en este navegador, incluso si lo cierras.
+    </p>
+    <button class="button button-primary" (click)="vm.go('my-orders')">Ver mis pedidos</button>
+    <button class="text-button" (click)="vm.go('menu')">Volver al menú</button>
+  </div>
+</section>

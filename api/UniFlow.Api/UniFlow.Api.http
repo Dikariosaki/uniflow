@@ -1,0 +1,10 @@
+@UniFlowApi = http://localhost:5269
+
+GET {{UniFlowApi}}/health
+Accept: application/json
+
+### Public catalog
+GET {{UniFlowApi}}/api/v1/catalog/categories
+Accept: application/json
+
+###

@@ -1,0 +1,17 @@
+.env
+.env.*
+!.env.example
+**/node_modules/
+**/dist/
+**/bin/
+**/obj/
+**/.angular/
+**/coverage/
+.DS_Store
+Thumbs.db
+verification/artifacts/
+verification/test-results/
+verification/playwright-report/
+verification/supabase/.temp/
+verification/supabase/.branches/
+verification/*.log

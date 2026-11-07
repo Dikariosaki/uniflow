@@ -1,0 +1,72 @@
+services:
+  - type: web
+    name: uniflow-api
+    runtime: docker
+    region: virginia
+    plan: free
+    dockerfilePath: ./api/UniFlow.Api/Dockerfile
+    dockerContext: ./api
+    healthCheckPath: /health
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ConnectionStrings__Supabase
+        sync: false
+      - key: Supabase__Url
+        sync: false
+      - key: Supabase__AnonKey
+        sync: false
+      - key: Supabase__ServiceRoleKey
+        sync: false
+      - key: Supabase__JwtAudience
+        value: authenticated
+      - key: Supabase__ProductBucket
+        value: uniflow-images
+      - key: Database__MigrateOnStartup
+        value: "false"
+      - key: Storage__EnsureBucketOnStartup
+        value: "true"
+      - key: Swagger__Enabled
+        value: "true"
+      - key: RateLimiting__PublicRequestsPerMinute
+        value: "30"
+      - key: AllowedOrigins
+        fromService:
+          type: web
+          name: uniflow-web
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: App__PublicUrl
+        fromService:
+          type: web
+          name: uniflow-web
+          envVarKey: RENDER_EXTERNAL_URL
+
+  - type: web
+    name: uniflow-web
+    runtime: docker
+    region: virginia
+    plan: free
+    dockerfilePath: ./web/Dockerfile
+    dockerContext: ./web
+    healthCheckPath: /
+    envVars:
+      - key: APP_PUBLIC_URL
+        fromService:
+          type: web
+          name: uniflow-web
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: API_BASE_URL
+        fromService:
+          type: web
+          name: uniflow-api
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: SUPABASE_URL
+        fromService:
+          type: web
+          name: uniflow-api
+          envVarKey: Supabase__Url
+      - key: SUPABASE_ANON_KEY
+        fromService:
+          type: web
+          name: uniflow-api
+          envVarKey: Supabase__AnonKey

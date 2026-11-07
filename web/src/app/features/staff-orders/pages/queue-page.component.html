@@ -1,0 +1,114 @@
+<section class="staff-main">
+  <div class="staff-header">
+    <div>
+      <span class="eyebrow">{{ vm.todayLabel }} · SEDE BOSQUE POPULAR</span>
+      <h1>Pedidos en vivo</h1>
+      <p>Organiza la preparación y entrega de hoy.</p>
+    </div>
+    <div class="staff-header-actions">
+      <span class="open-pill"><i></i> Operación activa</span
+      ><button class="button button-outline" (click)="vm.loadOrders()"><span class="material-symbol" aria-hidden="true">refresh</span> Actualizar</button>
+    </div>
+  </div>
+  <div class="metric-row">
+    <article class="metric-card">
+      <span>En cola</span
+      ><strong>{{ vm.activeOrders.filter((o) => o.status === 'CONFIRMADO').length }}</strong
+      ><small>Listos para iniciar</small>
+    </article>
+    <article class="metric-card">
+      <span>En preparación</span
+      ><strong>{{ vm.activeOrders.filter((o) => o.status === 'EN_PREPARACION').length }}</strong
+      ><small>En cocina</small>
+    </article>
+    <article class="metric-card">
+      <span>Listos</span
+      ><strong>{{ vm.activeOrders.filter((o) => o.status === 'LISTO').length }}</strong
+      ><small>Esperando recogida</small>
+    </article>
+    <article class="metric-card highlight">
+      <span>Entregados hoy</span><strong>{{ vm.deliveredToday }}</strong
+      ><small>Pedidos completados</small>
+    </article>
+  </div>
+  <div class="queue-toolbar">
+    <div>
+      <h2>Cola de preparación</h2>
+      <p>Ordenada por franja de recogida</p>
+    </div>
+    <span class="muted">{{ vm.activeOrders.length }} pedidos activos</span>
+  </div>
+  <div class="order-grid" *ngIf="vm.activeOrders.length; else noOrders">
+    <article class="order-card panel-card" *ngFor="let order of vm.activeOrders">
+      <div class="order-card-top">
+        <span class="order-number">PEDIDO #{{ vm.orderNumber(order.id) }}</span
+        ><span class="status-chip" [ngClass]="vm.statusClass(order.status)">{{
+          vm.statusLabel(order.status)
+        }}</span>
+      </div>
+      <div class="order-customer">
+        <strong>{{ order.customerAlias }}</strong
+        ><span>{{ order.customerPhone }} · {{ vm.time(order.slot) }}</span>
+      </div>
+      <div class="order-items">
+        <div *ngFor="let item of order.items">
+          <span>{{ item.quantity }} × {{ item.nameSnapshot }}</span>
+        </div>
+      </div>
+      <div class="order-card-bottom">
+        <strong>{{ vm.money(order.totalCop) }}</strong>
+        <div>
+          <button class="text-button" (click)="vm.openOrderDetails(order)">Detalles</button>
+          <button
+            class="text-button danger"
+            *ngIf="
+              order.status === 'CONFIRMADO' ||
+              order.status === 'EN_PREPARACION' ||
+              order.status === 'LISTO'
+            "
+            (click)="vm.advance(order, 'CANCELADO')"
+          >
+            Cancelar</button
+          ><button
+            class="button button-primary small-button"
+            *ngIf="order.status === 'CONFIRMADO'"
+            (click)="vm.advance(order, 'EN_PREPARACION')"
+          >
+            Iniciar preparación</button
+          ><button
+            class="button button-primary small-button"
+            *ngIf="order.status === 'EN_PREPARACION'"
+            (click)="vm.advance(order, 'LISTO')"
+          >
+            Marcar listo</button
+          ><button
+            class="button button-primary small-button"
+            *ngIf="order.status === 'LISTO'"
+            (click)="vm.deliver(order)"
+          >
+            Verificar entrega
+          </button>
+        </div>
+      </div>
+    </article>
+  </div>
+  <ng-template #noOrders
+    ><div class="empty-state compact">
+      <span class="material-symbol" aria-hidden="true">auto_awesome</span>
+      <h3>Todo al día</h3>
+      <p>Los pedidos nuevos aparecerán aquí automáticamente.</p>
+    </div></ng-template
+  >
+</section>
+<app-order-detail-dialog
+  *ngIf="vm.selectedOrder"
+  [order]="vm.selectedOrder"
+  (closed)="vm.closeOrderDetails()"
+/>
+<app-form-dialog
+  [config]="vm.formDialog"
+  [saving]="vm.dialogSaving"
+  [errorMessage]="vm.dialogError"
+  (saved)="vm.saveDialog($event)"
+  (cancelled)="vm.closeDialog()"
+/>

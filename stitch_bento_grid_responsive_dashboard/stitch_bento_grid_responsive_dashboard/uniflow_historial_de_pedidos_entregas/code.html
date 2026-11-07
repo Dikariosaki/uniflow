@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+
+<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"surface-tint":"#5148d7","surface-container":"#eaedff","on-secondary":"#ffffff","primary-container":"#4338ca","on-tertiary":"#ffffff","outline-variant":"#c7c4d7","on-tertiary-fixed":"#002113","on-error":"#ffffff","state-ready-border":"#A7F3D0","state-progress-text":"#3730A3","border-brand":"#E0E7FF","on-primary":"#ffffff","on-secondary-fixed-variant":"#2f2ebe","state-progress-bg":"#EEF2FF","primary-fixed":"#e3dfff","secondary-fixed-dim":"#c0c1ff","border-subtle":"#E2E8F0","surface-container-lowest":"#ffffff","on-primary-fixed-variant":"#372abf","surface-card":"#FFFFFF","on-error-container":"#93000a","on-primary-fixed":"#100069","surface-container-highest":"#dae2fd","state-alert-bg":"#FEF2F2","surface-container-high":"#e2e7ff","on-surface-variant":"#464554","tertiary":"#00442d","state-pending-text":"#92400E","state-ready-text":"#065F46","surface-variant":"#dae2fd","tertiary-fixed-dim":"#4edea3","surface-dim":"#d2d9f4","inverse-surface":"#283044","surface-bright":"#faf8ff","on-background":"#131b2e","on-tertiary-fixed-variant":"#005236","on-tertiary-container":"#4ddda2","secondary-container":"#6063ee","tertiary-container":"#005e3f","on-secondary-fixed":"#07006c","on-primary-container":"#c1beff","error-container":"#ffdad6","outline":"#777586","on-surface":"#131b2e","inverse-primary":"#c3c0ff","on-secondary-container":"#fffbff","error":"#ba1a1a","state-pending-bg":"#FEF3C7","background":"#faf8ff","secondary-fixed":"#e1e0ff","surface":"#faf8ff","surface-container-low":"#f2f3ff","surface-bg":"#F8FAFC","primary":"#2a14b4","secondary":"#4648d4","tertiary-fixed":"#6ffbbe","state-alert-text":"#991B1B","inverse-on-surface":"#eef0ff","primary-fixed-dim":"#c3c0ff","state-ready-bg":"#ECFDF5"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"gutter-desktop":"1.5rem","space-2xl":"2rem","space-xs":"0.25rem","margin-desktop":"2rem","space-xl":"1.5rem","space-sm":"0.5rem","gutter":"1rem","space-md":"1rem","margin":"1rem","space-lg":"1.25rem"},"fontFamily":{"headline-lg":["Plus Jakarta Sans"],"caption":["Plus Jakarta Sans"],"headline-xl-mobile":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"],"title-md":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"body-lg":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"label-lg":["Plus Jakarta Sans"]},"fontSize":{"headline-lg":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"700"}],"caption":["11px",{"lineHeight":"14px","letterSpacing":"0.02em","fontWeight":"500"}],"headline-xl-mobile":["26px",{"lineHeight":"34px","letterSpacing":"-0.015em","fontWeight":"800"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"600"}],"title-md":["18px",{"lineHeight":"24px","fontWeight":"600"}],"headline-xl":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"800"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"500"}],"headline-md":["20px",{"lineHeight":"28px","fontWeight":"700"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"label-lg":["14px",{"lineHeight":"20px","letterSpacing":"0.01em","fontWeight":"600"}]}}}};</script></head><body class="bg-surface-bg font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-card z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col"><div class="h-16 px-space-lg flex items-center gap-space-sm bg-surface-card"><div class="w-9 h-9 rounded-xl bg-primary flex items-center justify-center text-on-primary font-headline-lg text-headline-md">U</div><div class="flex flex-col"><span class="font-headline-md text-title-md text-primary tracking-tight leading-none">UniFlow</span><span class="font-caption text-caption text-on-surface-variant font-medium tracking-wide uppercase mt-space-xs">Cafetería OS</span></div></div><div class="px-space-md py-space-sm"><div class="p-space-sm rounded-xl bg-surface-container-low flex items-center gap-space-sm"><span class="material-symbols-outlined text-secondary text-[20px]">storefront</span><div class="flex flex-col min-w-0"><span class="font-label-md text-label-md text-on-surface truncate">Bloque B</span><span class="font-caption text-caption text-on-surface-variant truncate">Sede Bosque Popular</span></div></div></div><nav class="flex flex-col gap-space-xs px-space-md mt-space-sm" data-active-classes="bg-primary-container text-on-primary font-label-lg rounded-xl shadow-[0_4px_12px_rgba(67,56,202,0.2)]"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-lg text-label-lg transition-all" data-path="pedidos-en-vivo" href="#"><span class="material-symbols-outlined text-[20px]">table_restaurant</span><span>Pedidos en Vivo</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-lg text-label-lg transition-all" data-path="en-preparacion-cocina" href="#"><span class="material-symbols-outlined text-[20px]">soup_kitchen</span><span>En Preparación / Cocina</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-lg text-label-lg transition-all" data-path="historial-entregas" href="#"><span class="material-symbols-outlined text-[20px]">history</span><span>Historial &amp; Entregas</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-lg text-label-lg transition-all" data-path="inventario-menu" href="#"><span class="material-symbols-outlined text-[20px]">restaurant_menu</span><span>Inventario &amp; Menú</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-lg text-label-lg transition-all" data-path="reportes-de-turnos-cupos" href="#"><span class="material-symbols-outlined text-[20px]">bar_chart_4_bars</span><span>Reportes de Turnos &amp; Cupos</span></a></nav></div><div class="p-space-md"><div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-space-xs"><div class="flex items-center justify-between"><span class="font-caption text-caption text-on-surface-variant uppercase font-bold tracking-wider">Capacidad Sala</span><span class="font-label-md text-label-md text-state-ready-text">82%</span></div><div class="w-full h-1.5 rounded-full bg-surface-container-highest overflow-hidden"><div class="h-full bg-primary-container rounded-full" style="width: 82%"></div></div><div class="flex items-center justify-between text-on-surface-variant font-caption text-caption mt-space-xs"><span>164 comensales</span><span>200 máx</span></div></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface-card/90 backdrop-blur-xl z-40 shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="w-full h-full px-space-xl flex items-center justify-between"><div class="flex items-center gap-space-md"><div class="flex flex-col"><h1 class="font-label-lg text-label-lg text-on-surface font-bold">Cafetería Bloque B</h1><span class="font-caption text-caption text-on-surface-variant">Sede Bosque Popular • Universidad</span></div><div class="h-6 w-px bg-surface-container-high"></div><div class="inline-flex items-center gap-space-xs px-space-sm py-1 rounded-full bg-state-ready-bg text-state-ready-text"><span class="w-2 h-2 rounded-full bg-tertiary-container animate-pulse"></span><span class="font-label-md text-label-md">Modo: Operación Activa</span></div></div><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-xs text-on-surface-variant bg-surface-container-low px-space-sm py-1.5 rounded-xl"><span class="material-symbols-outlined text-[18px] text-secondary">schedule</span><span class="font-label-md text-label-md font-semibold text-on-surface">12:44:09 PM</span><span class="font-caption text-caption text-on-surface-variant">COT (UTC-5)</span></div><button class="flex items-center gap-space-xs px-space-md py-2 rounded-xl bg-surface-container-low hover:bg-surface-container-high text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[18px] text-primary">barcode_scanner</span><span class="font-label-md text-label-md font-semibold">Escanear Ticket</span></button><div class="h-6 w-px bg-surface-container-high"></div><div class="flex items-center gap-space-sm"><div class="flex flex-col text-right"><span class="font-label-md text-label-md font-bold text-on-surface leading-tight">Carlos M.</span><span class="font-caption text-caption text-primary font-semibold">Jefe de Cocina</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></div></header><main class="w-full pt-16 bg-surface-bg min-h-screen px-space-xl py-space-xl"><div class="flex flex-col w-full">
+<!-- Interactive Script for Filtering & Modals -->
+<script>
+    function switchTab(status) {
+      const rows = document.querySelectorAll('.order-row');
+      const tabs = document.querySelectorAll('.tab-chip');
+      tabs.forEach(t => {
+        t.classList.remove('bg-primary-container', 'text-on-primary', 'shadow-md');
+        t.classList.add('bg-surface-card', 'text-on-surface-variant');
+      });
+      const activeBtn = document.getElementById('tab-' + status);
+      if(activeBtn) {
+        activeBtn.classList.add('bg-primary-container', 'text-on-primary', 'shadow-md');
+        activeBtn.classList.remove('bg-surface-card', 'text-on-surface-variant');
+      }
+
+      rows.forEach(r => {
+        if(status === 'all') {
+          r.style.display = '';
+        } else {
+          r.style.display = r.getAttribute('data-status') === status ? '' : 'none';
+        }
+      });
+    }
+
+    function toggleTraceDrawer(orderId, student, items, total, operator, cycleTime, slaStatus) {
+      const drawer = document.getElementById('trace-drawer');
+      const backdrop = document.getElementById('drawer-backdrop');
+      if (!drawer) return;
+
+      if (orderId) {
+        document.getElementById('drawer-order-id').innerText = '#' + orderId;
+        document.getElementById('drawer-student').innerText = student;
+        document.getElementById('drawer-items').innerText = items;
+        document.getElementById('drawer-total').innerText = total;
+        document.getElementById('drawer-operator').innerText = operator;
+        document.getElementById('drawer-cycle').innerText = cycleTime;
+        document.getElementById('drawer-sla').innerText = slaStatus;
+
+        drawer.classList.remove('translate-x-full');
+        backdrop.classList.remove('hidden');
+      } else {
+        drawer.classList.add('translate-x-full');
+        backdrop.classList.add('hidden');
+      }
+    }
+
+    function filterTable() {
+      const query = document.getElementById('search-input').value.toLowerCase();
+      const rows = document.querySelectorAll('.order-row');
+      rows.forEach(r => {
+        const text = r.innerText.toLowerCase();
+        r.style.display = text.includes(query) ? '' : 'none';
+      });
+    }
+
+    function downloadMockCSV() {
+      const csvData = "ID_Pedido,Fecha,Estudiante,Items,Franja_SLA,Total_COP,Estado_SLA,Operador\\n#128,2026-11-07 12:38,Mateo Ramos (Pregrado),1x Combo Arepa Mechada + Café Americano,11:00-11:15,$12.500,A tiempo (6.5 min),Carlos M. (Ventanilla 2)\\n#127,2026-11-07 12:35,Sofía Lozano (Docente),2x Empanada de Pollo + Jugo Mora,Inmediato,$9.800,A tiempo (7.1 min),Carlos M. (Ventanilla 1)\\n#126,2026-11-07 12:30,Andrés Morales (Ingeniería),1x Almuerzo Ejecutivo Menú B,11:15-11:30,$15.000,Retraso (+3.2 min),Ana P. (Ventanilla 2)";
+      const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", "UniFlow_Despachos_BloqueB_20261107.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+<!-- Page Header & Action Controls -->
+<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-space-lg mb-space-xl">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="px-space-sm py-0.5 rounded-full bg-surface-container-high text-primary font-caption text-caption font-bold uppercase tracking-wider">
+          Auditoría Operativa RF-OPS-05 &amp; RF-ADM-06
+        </span>
+<span class="font-caption text-caption text-on-surface-variant flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-state-ready-border"></span> Sincronizado en tiempo real
+        </span>
+</div>
+<h2 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">Historial de Pedidos &amp; Registro de Entregas</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-3xl">
+        Trazabilidad completa de comandas despachadas, métricas de cumplimiento de franjas horarias (SLA), registro detallado de eventos de cambio de estado y control de incidencias en la Cafetería Bloque B.
+      </p>
+</div>
+<!-- Quick Action Bar -->
+<div class="flex flex-wrap items-center gap-space-sm self-start lg:self-center">
+<!-- Date Selector Dropdown -->
+<div class="flex items-center gap-space-xs bg-surface-card px-space-md py-2.5 rounded-xl shadow-sm text-on-surface">
+<span class="material-symbols-outlined text-[18px] text-primary">calendar_today</span>
+<select class="bg-transparent font-label-md text-label-md font-semibold text-on-surface outline-none cursor-pointer">
+<option selected="">Hoy • 7 Nov 2026</option>
+<option>Ayer • 6 Nov 2026</option>
+<option>Esta Semana (1-7 Nov)</option>
+<option>Turno Matutino (7:00 - 14:00)</option>
+</select>
+</div>
+<!-- Turno / Franja Selector -->
+<div class="flex items-center gap-space-xs bg-surface-card px-space-md py-2.5 rounded-xl shadow-sm text-on-surface">
+<span class="material-symbols-outlined text-[18px] text-secondary">filter_alt</span>
+<select class="bg-transparent font-label-md text-label-md font-semibold text-on-surface outline-none cursor-pointer">
+<option>Todas las Franjas</option>
+<option>Franja 11:00 - 11:15 a. m.</option>
+<option>Franja 11:15 - 11:30 a. m.</option>
+<option>Franja 11:30 - 11:45 a. m.</option>
+<option>Inmediato (Lo antes posible)</option>
+</select>
+</div>
+<!-- Export CSV CTA -->
+<button class="flex items-center gap-space-sm px-space-lg py-2.5 rounded-xl bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg shadow-md transition-all active:scale-95 cursor-pointer" onclick="downloadMockCSV()" type="button">
+<span class="material-symbols-outlined text-[20px]">download</span>
+<span>Exportar Reporte CSV</span>
+</button>
+</div>
+</div>
+<!-- Bento Grid: Operational Metrics & SLA Dashboard -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-space-md mb-space-xl">
+<!-- Card 1: Total Pedidos Hoy -->
+<div class="bg-surface-card p-space-lg rounded-xl shadow-sm flex flex-col justify-between hover:shadow-md transition-all">
+<div class="flex items-center justify-between">
+<span class="font-caption text-caption text-on-surface-variant font-bold uppercase tracking-wider">Despachos Hoy</span>
+<div class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</div>
+</div>
+<div class="my-space-sm">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-xl text-headline-xl text-on-surface font-extrabold tracking-tight">142</span>
+<span class="font-label-md text-label-md text-on-surface-variant font-medium">órdenes</span>
+</div>
+<div class="flex items-center gap-1.5 mt-space-xs">
+<span class="font-caption text-caption text-state-ready-text font-bold flex items-center">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span> 98.6%
+          </span>
+<span class="font-caption text-caption text-on-surface-variant">completados exitosamente</span>
+</div>
+</div>
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary-container h-full rounded-full" style="width: 98.6%"></div>
+</div>
+</div>
+<!-- Card 2: SLA Franja Horaria -->
+<div class="bg-surface-card p-space-lg rounded-xl shadow-sm flex flex-col justify-between hover:shadow-md transition-all">
+<div class="flex items-center justify-between">
+<span class="font-caption text-caption text-on-surface-variant font-bold uppercase tracking-wider">Cumplimiento SLA</span>
+<div class="w-8 h-8 rounded-lg bg-state-ready-bg flex items-center justify-center text-state-ready-text">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+</div>
+</div>
+<div class="my-space-sm">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-xl text-headline-xl text-state-ready-text font-extrabold tracking-tight">94.2%</span>
+<span class="font-caption text-caption text-state-ready-text font-bold bg-state-ready-bg px-1.5 py-0.5 rounded-full">Meta ≥85%</span>
+</div>
+<p class="font-caption text-caption text-on-surface-variant mt-space-xs">
+          134 entregas en la franja comprometida
+        </p>
+</div>
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-state-ready-text h-full rounded-full" style="width: 94.2%"></div>
+</div>
+</div>
+<!-- Card 3: Tiempo Medio de Ciclo -->
+<div class="bg-surface-card p-space-lg rounded-xl shadow-sm flex flex-col justify-between hover:shadow-md transition-all">
+<div class="flex items-center justify-between">
+<span class="font-caption text-caption text-on-surface-variant font-bold uppercase tracking-wider">Tiempo de Ciclo</span>
+<div class="w-8 h-8 rounded-lg bg-state-progress-bg flex items-center justify-center text-state-progress-text">
+<span class="material-symbols-outlined text-[18px]">timer</span>
+</div>
+</div>
+<div class="my-space-sm">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-xl text-headline-xl text-on-surface font-extrabold tracking-tight">7.4</span>
+<span class="font-label-md text-label-md text-on-surface-variant font-medium">minutos</span>
+</div>
+<p class="font-caption text-caption text-on-surface-variant mt-space-xs">
+          Confirmación → Entrega final (Avg)
+        </p>
+</div>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-caption text-caption">
+<span class="material-symbols-outlined text-[14px] text-tertiary">speed</span>
+<span>-1.2 min vs promedio semana</span>
+</div>
+</div>
+<!-- Card 4: Recaudo Facturado Total -->
+<div class="bg-surface-card p-space-lg rounded-xl shadow-sm flex flex-col justify-between hover:shadow-md transition-all">
+<div class="flex items-center justify-between">
+<span class="font-caption text-caption text-on-surface-variant font-bold uppercase tracking-wider">Volumen Facturado</span>
+<div class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+</div>
+</div>
+<div class="my-space-sm">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-xl text-headline-xl text-on-surface font-extrabold tracking-tight">$1.248K</span>
+<span class="font-caption text-caption text-on-surface-variant font-semibold">COP</span>
+</div>
+<p class="font-caption text-caption text-on-surface-variant mt-space-xs">
+          100% cobrado y arqueado en caja
+        </p>
+</div>
+<div class="flex items-center gap-space-xs font-caption text-caption text-on-surface-variant">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span>Ticket promedio: $8.790 COP</span>
+</div>
+</div>
+<!-- Card 5: Incidencias & Cancelaciones -->
+<div class="bg-surface-card p-space-lg rounded-xl shadow-sm flex flex-col justify-between hover:shadow-md transition-all">
+<div class="flex items-center justify-between">
+<span class="font-caption text-caption text-on-surface-variant font-bold uppercase tracking-wider">Incidencias</span>
+<div class="w-8 h-8 rounded-lg bg-state-alert-bg flex items-center justify-center text-state-alert-text">
+<span class="material-symbols-outlined text-[18px]">warning</span>
+</div>
+</div>
+<div class="my-space-sm">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-xl text-headline-xl text-state-alert-text font-extrabold tracking-tight">2</span>
+<span class="font-label-md text-label-md text-on-surface-variant font-medium">casos (1.4%)</span>
+</div>
+<p class="font-caption text-caption text-on-surface-variant mt-space-xs truncate">
+          1 cancelación / 1 cambio sede
+        </p>
+</div>
+<button class="inline-flex items-center gap-1 font-caption text-caption text-primary font-bold hover:underline cursor-pointer" onclick="switchTab('canceled')" type="button">
+<span>Auditar incidencias</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Main Content Mosaic: Table & Side Incident Widget -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg">
+<!-- Left / Center: Search, Filters & History Table (8 or 9 cols) -->
+<div class="xl:col-span-9 flex flex-col gap-space-md">
+<!-- Search & Status Chip Filter Bar -->
+<div class="bg-surface-card p-space-md rounded-xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<!-- Search Input -->
+<div class="relative flex-1">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[20px] text-on-surface-variant">search</span>
+<input class="w-full pl-11 pr-4 py-2.5 bg-surface-container-low rounded-xl text-on-surface font-body-md text-body-md placeholder:text-on-surface-variant/70 focus:outline-none focus:bg-surface-container-highest transition-all" id="search-input" onkeyup="filterTable()" placeholder="Buscar por #ID, estudiante, ítem de menú o ventanilla..." type="text"/>
+</div>
+<!-- Filter Status Tabs -->
+<div class="flex items-center gap-space-xs overflow-x-auto pb-1 md:pb-0">
+<button class="tab-chip px-space-md py-2 rounded-xl bg-primary-container text-on-primary font-label-md text-label-md font-semibold transition-all whitespace-nowrap shadow-md cursor-pointer" id="tab-all" onclick="switchTab('all')" type="button">
+            Todos (142)
+          </button>
+<button class="tab-chip px-space-md py-2 rounded-xl bg-surface-card text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md font-semibold transition-all whitespace-nowrap cursor-pointer" id="tab-ontime" onclick="switchTab('ontime')" type="button">
+            A tiempo (128)
+          </button>
+<button class="tab-chip px-space-md py-2 rounded-xl bg-surface-card text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md font-semibold transition-all whitespace-nowrap cursor-pointer" id="tab-delayed" onclick="switchTab('delayed')" type="button">
+            Retraso &gt;2m (8)
+          </button>
+<button class="tab-chip px-space-md py-2 rounded-xl bg-surface-card text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md font-semibold transition-all whitespace-nowrap cursor-pointer" id="tab-canceled" onclick="switchTab('canceled')" type="button">
+            Incidencias (2)
+          </button>
+</div>
+</div>
+<!-- Orders Bento Table Card -->
+<div class="bg-surface-card rounded-xl shadow-sm overflow-hidden flex flex-col">
+<!-- Table Subheader Info -->
+<div class="px-space-lg py-space-md bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-lg text-label-lg text-on-surface font-bold">Bitácora de Despacho y Ciclo de Vida</span>
+<span class="px-space-xs py-0.5 bg-surface-container text-primary font-caption text-caption rounded font-semibold">Caja Bloque B</span>
+</div>
+<span class="font-caption text-caption text-on-surface-variant">RF-OPS-05 • Mostrando 8 registros de muestra</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-card text-on-surface-variant font-caption text-caption uppercase tracking-wider font-bold">
+<th class="py-space-sm px-space-md">Comanda / Estado</th>
+<th class="py-space-sm px-space-md">Comensal</th>
+<th class="py-space-sm px-space-md">Productos Ordenados</th>
+<th class="py-space-sm px-space-md">Franja Comprometida</th>
+<th class="py-space-sm px-space-md">Auditoría Tiempos</th>
+<th class="py-space-sm px-space-md">Monto Total</th>
+<th class="py-space-sm px-space-md text-right">Trazabilidad</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-transparent font-body-md text-body-md text-on-surface">
+<!-- Row 1: #128 Ontime -->
+<tr class="order-row hover:bg-surface-container-low/60 transition-colors" data-status="ontime">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-md text-headline-md text-primary font-extrabold tracking-tight">#128</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-state-ready-bg text-state-ready-text font-caption text-caption font-bold">
+<span class="material-symbols-outlined text-[13px]">check_circle</span> Entregado
+                    </span>
+</div>
+<span class="font-caption text-caption text-on-surface-variant block mt-0.5">Ventanilla 2 • Carlos M.</span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md font-bold text-on-surface truncate">Mateo Ramos</span>
+<span class="font-caption text-caption text-on-surface-variant truncate">Pregrado • Ing. Sistemas</span>
+</div>
+</td>
+<td class="py-space-md px-space-md max-w-xs">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface truncate">1x Combo Arepa Mechada + Café Americano</span>
+<span class="font-caption text-caption text-on-surface-variant">Notas: Sin azúcar en café</span>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-primary">schedule</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface">11:00 - 11:15 a. m.</span>
+</div>
+<span class="font-caption text-caption text-on-surface-variant block">Turno Programado</span>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<div class="flex items-center gap-1">
+<span class="px-2 py-0.5 rounded-full bg-state-ready-bg text-state-ready-text font-caption text-caption font-bold inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">timer</span> A tiempo (6.5 min)
+                      </span>
+</div>
+<span class="font-caption text-caption text-on-surface-variant mt-0.5">Listo 11:06 • Despacho 11:08</span>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="font-label-lg text-label-lg font-bold text-on-surface">$12.500</span>
+<span class="font-caption text-caption text-on-surface-variant block">Nequi / App</span>
+</td>
+<td class="py-space-md px-space-md text-right whitespace-nowrap">
+<button class="px-3 py-1.5 rounded-xl bg-surface-container-low hover:bg-surface-container-high text-primary font-label-md text-label-md font-semibold transition-all inline-flex items-center gap-1 cursor-pointer" onclick="toggleTraceDrawer('128', 'Mateo Ramos (Pregrado)', '1x Combo Arepa Mechada + Café Americano', '$12.500 COP', 'Carlos M. • Ventanilla 2', '6.5 min (Dentro de SLA)', 'Cumplido')" type="button">
+<span class="material-symbols-outlined text-[16px]">receipt</span>
+<span>Trazabilidad</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: #127 Ontime -->
+<tr class="order-row hover:bg-surface-container-low/60 transition-colors" data-status="ontime">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-md text-headline-md text-primary font-extrabold tracking-tight">#127</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-state-ready-bg text-state-ready-text font-caption text-caption font-bold">
+<span class="material-symbols-outlined text-[13px]">check_circle</span> Entregado
+                    </span>
+</div>
+<span class="font-caption text-caption text-on-surface-variant block mt-0.5">Ventanilla 1 • Ana P.</span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md font-bold text-on-surface truncate">Dra. Sofía Lozano</span>
+<span class="font-caption text-caption text-on-surface-variant truncate">Docente • Fac. Derecho</span>
+</div>
+</td>
+<td class="py-space-md px-space-md max-w-xs">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface truncate">2x Empanada de Pollo + 1x Jugo Mora</span>
+<span class="font-caption text-caption text-on-surface-variant">Listo para llevar</span>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-secondary">bolt</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface">Lo antes posible</span>
+</div>
+<span class="font-caption text-caption text-on-surface-variant block">Prioridad Inmediata</span>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<div class="flex items-center gap-1">
+<span class="px-2 py-0.5 rounded-full bg-state-ready-bg text-state-ready-text font-caption text-caption font-bold inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">timer</span> A tiempo (5.2 min)
+                      </span>
+</div>
+<span class="font-caption text-caption text-on-surface-variant mt-0.5">Listo 10:55 • Despacho 10:57</span>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="font-label-lg text-label-lg font-bold text-on-surface">$9.800</span>
+<span class="font-caption text-caption text-on-surface-variant block">Efectivo Mostrador</span>
+</td>
+<td class="py-space-md px-space-md text-right whitespace-nowrap">
+<button class="px-3 py-1.5 rounded-xl bg-surface-container-low hover:bg-surface-container-high text-primary font-label-md text-label-md font-semibold transition-all inline-flex items-center gap-1 cursor-pointer" onclick="toggleTraceDrawer('127', 'Dra. Sofía Lozano (Docente)', '2x Empanada de Pollo + 1x Jugo Mora', '$9.800 COP', 'Ana P. • Ventanilla 1', '5.2 min', 'Cumplido')" type="button">
+<span class="material-symbols-outlined text-[16px]">receipt</span>
+<span>Trazabilidad</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: #126 Delayed SLA (+3.2 min) -->
+<tr class="order-row hover:bg-surface-container-low/60 transition-colors" data-status="delayed">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-md text-headline-md text-on-surface font-extrabold tracking-tight">#126</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-state-pending-bg text-state-pending-text font-caption text-caption font-bold">
+<span class="material-symbols-outlined text-[13px]">alarm_on</span> Despachado +Retraso
+                    </span>
+</div>
+<span class="font-caption text-caption text-on-surface-variant block mt-0.5">Ventanilla 2 • Carlos M.</span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md font-bold text-on-surface truncate">Andrés Morales</span>
+<span class="font-caption text-caption text-on-surface-variant truncate">Pregrado • Ing. Civil</span>
+</div>
+</td>
+<td class="py-space-md px-space-md max-w-xs">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface truncate">1x Almuerzo Ejecutivo (Carne Asada + Arroz + Sopa)</span>
+<span class="font-caption text-caption text-on-surface-variant">Guarnición: Yuca frita extra</span>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-primary">schedule</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface">11:15 - 11:30 a. m.</span>
+</div>
+<span class="font-caption text-caption text-on-surface-variant block">Turno Pico Mediodía</span>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<div class="flex items-center gap-1">
+<span class="px-2 py-0.5 rounded-full bg-state-pending-bg text-state-pending-text font-caption text-caption font-bold inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">warning</span> +3.2 min retraso
+                      </span>
+</div>
+<span class="font-caption text-caption text-on-surface-variant mt-0.5">Retardo en plancha de carnes</span>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="font-label-lg text-label-lg font-bold text-on-surface">$16.200</span>
+<span class="font-caption text-caption text-on-surface-variant block">Daviplata</span>
+</td>
+<td class="py-space-md px-space-md text-right whitespace-nowrap">
+<button class="px-3 py-1.5 rounded-xl bg-surface-container-low hover:bg-surface-container-high text-primary font-label-md text-label-md font-semibold transition-all inline-flex items-center gap-1 cursor-pointer" onclick="toggleTraceDrawer('126', 'Andrés Morales (Pregrado)', '1x Almuerzo Ejecutivo Carne Asada', '$16.200 COP', 'Carlos M. • Ventanilla 2', '14.2 min (SLA Excedido +3.2m)', 'Demorado')" type="button">
+<span class="material-symbols-outlined text-[16px]">receipt</span>
+<span>Trazabilidad</span>
+</button>
+</td>
+</tr>
+<!-- Row 4: #125 Canceled / Incident -->
+<tr class="order-row hover:bg-surface-container-low/60 transition-colors" data-status="canceled">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-md text-headline-md text-error font-extrabold tracking-tight">#125</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-state-alert-bg text-state-alert-text font-caption text-caption font-bold">
+<span class="material-symbols-outlined text-[13px]">cancel</span> Cancelado
+                    </span>
+</div>
+<span class="font-caption text-caption text-on-surface-variant block mt-0.5">Incidencia RF-OPS-06</span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md font-bold text-on-surface truncate">Camila V. Ortiz</span>
+<span class="font-caption text-caption text-on-surface-variant truncate">Pregrado • Administración</span>
+</div>
+</td>
+<td class="py-space-md px-space-md max-w-xs">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface line-through truncate">1x Bowl Saludable Quinoa + Jugo Guanábana</span>
+<span class="font-caption text-caption text-error font-semibold">Motivo: Quiebre de insumo (Guanábana)</span>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="font-label-md text-label-md font-semibold text-on-surface">11:15 - 11:30 a. m.</span>
+<span class="font-caption text-caption text-on-surface-variant block">Cancelado por cocina</span>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<span class="px-2 py-0.5 rounded-full bg-state-alert-bg text-state-alert-text font-caption text-caption font-bold inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">replay</span> Reversado a saldo
+                    </span>
+<span class="font-caption text-caption text-on-surface-variant mt-0.5">Cancelado a 2.1 min de emisión</span>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="font-label-lg text-label-lg font-bold text-error line-through">$14.000</span>
+<span class="font-caption text-caption text-on-surface-variant block">Reembolsado</span>
+</td>
+<td class="py-space-md px-space-md text-right whitespace-nowrap">
+<button class="px-3 py-1.5 rounded-xl bg-state-alert-bg text-state-alert-text hover:bg-error-container font-label-md text-label-md font-semibold transition-all inline-flex items-center gap-1 cursor-pointer" onclick="toggleTraceDrawer('125', 'Camila V. Ortiz (Pregrado)', '1x Bowl Quinoa (Cancelado)', '$14.000 COP (Reembolso)', 'Carlos M. (Jefe Cocina)', 'N/A (Cancelado 2m)', 'Incidencia - Stock')" type="button">
+<span class="material-symbols-outlined text-[16px]">report_problem</span>
+<span>Ver Auditoría</span>
+</button>
+</td>
+</tr>
+<!-- Row 5: #124 Ontime -->
+<tr class="order-row hover:bg-surface-container-low/60 transition-colors" data-status="ontime">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-md text-headline-md text-primary font-extrabold tracking-tight">#124</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-state-ready-bg text-state-ready-text font-caption text-caption font-bold">
+<span class="material-symbols-outlined text-[13px]">check_circle</span> Entregado
+                    </span>
+</div>
+<span class="font-caption text-caption text-on-surface-variant block mt-0.5">Ventanilla 1 • Ana P.</span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md font-bold text-on-surface truncate">Prof. Fernando Castro</span>
+<span class="font-caption text-caption text-on-surface-variant truncate">Docente • Postgrados</span>
+</div>
+</td>
+<td class="py-space-md px-space-md max-w-xs">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface truncate">1x Sándwich Roast Beef Artesanal + Café Tinto</span>
+<span class="font-caption text-caption text-on-surface-variant">Pan integral tostado</span>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="font-label-md text-label-md font-semibold text-on-surface">11:00 - 11:15 a. m.</span>
+<span class="font-caption text-caption text-on-surface-variant block">Turno Programado</span>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<span class="px-2 py-0.5 rounded-full bg-state-ready-bg text-state-ready-text font-caption text-caption font-bold inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">timer</span> A tiempo (7.1 min)
+                    </span>
+<span class="font-caption text-caption text-on-surface-variant mt-0.5">Listo 11:07 • Despacho 11:09</span>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="font-label-lg text-label-lg font-bold text-on-surface">$13.500</span>
+<span class="font-caption text-caption text-on-surface-variant block">Tarjeta Débito</span>
+</td>
+<td class="py-space-md px-space-md text-right whitespace-nowrap">
+<button class="px-3 py-1.5 rounded-xl bg-surface-container-low hover:bg-surface-container-high text-primary font-label-md text-label-md font-semibold transition-all inline-flex items-center gap-1 cursor-pointer" onclick="toggleTraceDrawer('124', 'Prof. Fernando Castro', '1x Sandwich Roast Beef + Cafe', '$13.500 COP', 'Ana P. • Ventanilla 1', '7.1 min', 'Cumplido')" type="button">
+<span class="material-symbols-outlined text-[16px]">receipt</span>
+<span>Trazabilidad</span>
+</button>
+</td>
+</tr>
+<!-- Row 6: #123 Ontime -->
+<tr class="order-row hover:bg-surface-container-low/60 transition-colors" data-status="ontime">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-md text-headline-md text-primary font-extrabold tracking-tight">#123</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-state-ready-bg text-state-ready-text font-caption text-caption font-bold">
+<span class="material-symbols-outlined text-[13px]">check_circle</span> Entregado
+                    </span>
+</div>
+<span class="font-caption text-caption text-on-surface-variant block mt-0.5">Ventanilla 2 • Carlos M.</span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md font-bold text-on-surface truncate">Valentina Rivas</span>
+<span class="font-caption text-caption text-on-surface-variant truncate">Pregrado • Psicología</span>
+</div>
+</td>
+<td class="py-space-md px-space-md max-w-xs">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface truncate">2x Pandebono Caliente + 1x Capuchino Vainilla</span>
+<span class="font-caption text-caption text-on-surface-variant">Desayuno tardío</span>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="font-label-md text-label-md font-semibold text-on-surface">10:45 - 11:00 a. m.</span>
+<span class="font-caption text-caption text-on-surface-variant block">Turno Programado</span>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<span class="px-2 py-0.5 rounded-full bg-state-ready-bg text-state-ready-text font-caption text-caption font-bold inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">timer</span> A tiempo (4.8 min)
+                    </span>
+<span class="font-caption text-caption text-on-surface-variant mt-0.5">Listo 10:49 • Despacho 10:50</span>
+</div>
+</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="font-label-lg text-label-lg font-bold text-on-surface">$8.200</span>
+<span class="font-caption text-caption text-on-surface-variant block">UniFlow Wallet</span>
+</td>
+<td class="py-space-md px-space-md text-right whitespace-nowrap">
+<button class="px-3 py-1.5 rounded-xl bg-surface-container-low hover:bg-surface-container-high text-primary font-label-md text-label-md font-semibold transition-all inline-flex items-center gap-1 cursor-pointer" onclick="toggleTraceDrawer('123', 'Valentina Rivas', '2x Pandebono + 1x Capuchino', '$8.200 COP', 'Carlos M. • Ventanilla 2', '4.8 min', 'Cumplido')" type="button">
+<span class="material-symbols-outlined text-[16px]">receipt</span>
+<span>Trazabilidad</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Elegant Bento Pagination Controls -->
+<div class="px-space-lg py-space-md bg-surface-card flex flex-col sm:flex-row items-center justify-between gap-space-sm">
+<div class="font-caption text-caption text-on-surface-variant">
+            Mostrando <span class="font-bold text-on-surface">1 - 6</span> de <span class="font-bold text-on-surface">142</span> comandas despachadas
+          </div>
+<div class="flex items-center gap-space-xs">
+<button class="px-space-md py-1.5 rounded-xl bg-surface-container-low text-on-surface-variant/40 font-label-md text-label-md font-semibold cursor-not-allowed" disabled="" type="button">
+              Anterior
+            </button>
+<button class="w-8 h-8 rounded-xl bg-primary-container text-on-primary font-label-md text-label-md font-bold flex items-center justify-center shadow-sm" type="button">
+              1
+            </button>
+<button class="w-8 h-8 rounded-xl bg-surface-container-low hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold flex items-center justify-center" type="button">
+              2
+            </button>
+<button class="w-8 h-8 rounded-xl bg-surface-container-low hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold flex items-center justify-center" type="button">
+              3
+            </button>
+<span class="font-caption text-caption text-on-surface-variant px-1">...</span>
+<button class="w-8 h-8 rounded-xl bg-surface-container-low hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold flex items-center justify-center" type="button">
+              15
+            </button>
+<button class="px-space-md py-1.5 rounded-xl bg-surface-container-low hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold cursor-pointer" type="button">
+              Siguiente
+            </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Sidebar Bento (3 cols): Incidents Log & Quick Export Tool -->
+<div class="xl:col-span-3 flex flex-col gap-space-lg">
+<!-- Bento Widget: Export Preview & Tool -->
+<div class="bg-surface-card p-space-lg rounded-xl shadow-sm flex flex-col">
+<div class="flex items-center gap-space-sm mb-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">table_chart</span>
+</div>
+<div>
+<h3 class="font-label-lg text-label-lg font-bold text-on-surface">Exportación Directa</h3>
+<span class="font-caption text-caption text-on-surface-variant">Cumplimiento RF-ADM-06</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-space-md">
+          Genera un archivo plano estructurado con todas las métricas de ciclo de vida de comandas para auditoría institucional.
+        </p>
+<!-- CSV Fields Tags -->
+<div class="p-space-sm bg-surface-container-low rounded-xl mb-space-md">
+<span class="font-caption text-caption text-on-surface-variant font-bold uppercase tracking-wider block mb-1.5">Columnas en payload:</span>
+<div class="flex flex-wrap gap-1">
+<span class="px-2 py-0.5 bg-surface-card text-on-surface font-caption text-caption rounded-full">order_id</span>
+<span class="px-2 py-0.5 bg-surface-card text-on-surface font-caption text-caption rounded-full">student_id</span>
+<span class="px-2 py-0.5 bg-surface-card text-on-surface font-caption text-caption rounded-full">slot_time</span>
+<span class="px-2 py-0.5 bg-surface-card text-on-surface font-caption text-caption rounded-full">cycle_mins</span>
+<span class="px-2 py-0.5 bg-surface-card text-on-surface font-caption text-caption rounded-full">sla_met</span>
+<span class="px-2 py-0.5 bg-surface-card text-on-surface font-caption text-caption rounded-full">total_cop</span>
+<span class="px-2 py-0.5 bg-surface-card text-on-surface font-caption text-caption rounded-full">operator</span>
+</div>
+</div>
+<button class="w-full flex items-center justify-center gap-space-xs py-3 rounded-xl bg-surface-container-high hover:bg-primary-container hover:text-on-primary text-primary font-label-lg text-label-lg transition-all cursor-pointer" onclick="downloadMockCSV()" type="button">
+<span class="material-symbols-outlined text-[18px]">file_download</span>
+<span>Descargar .CSV (UTF-8)</span>
+</button>
+</div>
+<!-- Bento Widget: Recent Operational Incidents (RF-OPS-06) -->
+<div class="bg-surface-card p-space-lg rounded-xl shadow-sm flex flex-col flex-1">
+<div class="flex items-center justify-between mb-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-state-alert-bg flex items-center justify-center text-state-alert-text">
+<span class="material-symbols-outlined text-[18px]">flag</span>
+</div>
+<div>
+<h3 class="font-label-lg text-label-lg font-bold text-on-surface">Auditoría Incidencias</h3>
+<span class="font-caption text-caption text-on-surface-variant">RF-OPS-06 • Turno Actual</span>
+</div>
+</div>
+<span class="px-2 py-0.5 bg-state-alert-bg text-state-alert-text font-caption text-caption font-bold rounded-full">2 Casos</span>
+</div>
+<!-- Incident Item 1 -->
+<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-space-xs mb-space-md">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md font-bold text-on-surface">Comanda #125</span>
+<span class="font-caption text-caption text-state-alert-text font-bold">Quiebre Stock</span>
+</div>
+<p class="font-caption text-caption text-on-surface-variant">
+            Agotado jugo de guanábana en estación de preparación fría. Se notificó al comensal mediante PWA y se revirtió saldo.
+          </p>
+<div class="flex items-center justify-between font-caption text-caption text-on-surface-variant pt-space-xs">
+<span>Actor: Carlos M. (Cocina)</span>
+<span class="font-semibold text-state-ready-text">Resuelto: Saldo OK</span>
+</div>
+</div>
+<!-- Incident Item 2 -->
+<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-space-xs mb-space-md">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md font-bold text-on-surface">Comanda #119</span>
+<span class="font-caption text-caption text-state-pending-text font-bold">Cambio de Sede</span>
+</div>
+<p class="font-caption text-caption text-on-surface-variant">
+            Estudiante solicitó por error en Bosque Popular encontrándose en Sede Candelaria. Cancelación inmediata.
+          </p>
+<div class="flex items-center justify-between font-caption text-caption text-on-surface-variant pt-space-xs">
+<span>Actor: Sofía L. (Caja)</span>
+<span class="font-semibold text-state-ready-text">Ticket Anulado</span>
+</div>
+</div>
+<!-- Metric Footer -->
+<div class="mt-auto p-space-sm rounded-xl bg-surface-container-high/60 flex items-center gap-space-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-[20px]">format_image_left</span>
+<p class="font-caption text-caption">
+            Tasa de resolución de incidencias en caja: <strong class="text-on-surface">100%</strong> en menos de 3 minutos.
+          </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Off-Canvas Drawer: Order Event Traceability & Ticket Inspection (EventoPedido RF-OPS-05) -->
+<div class="fixed inset-0 bg-on-background/40 backdrop-blur-sm z-50 hidden transition-opacity" id="drawer-backdrop" onclick="toggleTraceDrawer(null)"></div>
+<aside class="fixed right-0 top-0 bottom-0 w-full max-w-md bg-surface-card shadow-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col" id="trace-drawer">
+<!-- Drawer Header -->
+<div class="h-16 px-space-lg bg-surface-card flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[22px]">timeline</span>
+<div>
+<h3 class="font-label-lg text-label-lg font-bold text-on-surface">Trazabilidad de Eventos</h3>
+<span class="font-caption text-caption text-on-surface-variant">Auditoría EventoPedido • RF-OPS-05</span>
+</div>
+</div>
+<button class="w-8 h-8 rounded-full bg-surface-container-low hover:bg-surface-container-high flex items-center justify-center text-on-surface cursor-pointer" onclick="toggleTraceDrawer(null)" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<!-- Drawer Content Scroll -->
+<div class="p-space-lg flex-1 overflow-y-auto flex flex-col gap-space-lg bg-surface-bg">
+<!-- Order Quick Card -->
+<div class="p-space-md rounded-xl bg-surface-card shadow-sm flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-headline-lg text-headline-lg font-extrabold text-primary" id="drawer-order-id">#128</span>
+<span class="px-2 py-0.5 rounded-full bg-state-ready-bg text-state-ready-text font-caption text-caption font-bold" id="drawer-sla">Cumplido</span>
+</div>
+<span class="font-label-lg text-label-lg font-semibold text-on-surface" id="drawer-student">Mateo Ramos (Pregrado)</span>
+<div class="h-px bg-surface-container-high my-1"></div>
+<p class="font-body-md text-body-md text-on-surface-variant" id="drawer-items">1x Combo Arepa Mechada + Café Americano</p>
+<div class="flex items-center justify-between mt-space-xs font-label-md text-label-md">
+<span class="text-on-surface-variant">Total Pagado:</span>
+<span class="font-bold text-on-surface" id="drawer-total">$12.500 COP</span>
+</div>
+</div>
+<!-- Lifecycle SLA Breakdown -->
+<div class="p-space-md rounded-xl bg-surface-card shadow-sm flex flex-col gap-space-sm">
+<span class="font-caption text-caption font-bold text-on-surface-variant uppercase tracking-wider">Métricas de Ciclo Operativo</span>
+<div class="grid grid-cols-2 gap-space-sm">
+<div class="p-space-sm rounded-xl bg-surface-container-low">
+<span class="font-caption text-caption text-on-surface-variant block">Tiempo Total:</span>
+<span class="font-label-lg text-label-lg font-bold text-on-surface" id="drawer-cycle">6.5 min</span>
+</div>
+<div class="p-space-sm rounded-xl bg-surface-container-low">
+<span class="font-caption text-caption text-on-surface-variant block">Despachador:</span>
+<span class="font-label-md text-label-md font-bold text-on-surface truncate" id="drawer-operator">Carlos M.</span>
+</div>
+</div>
+</div>
+<!-- Event Timeline Stepper -->
+<div class="p-space-md rounded-xl bg-surface-card shadow-sm flex flex-col">
+<span class="font-caption text-caption font-bold text-on-surface-variant uppercase tracking-wider mb-space-md">Timeline de Estados (EventoPedido)</span>
+<div class="relative pl-6 flex flex-col gap-space-lg">
+<!-- Step 1: Creado -->
+<div class="relative">
+<div class="absolute -left-6 top-1 w-4 h-4 rounded-full bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[10px]">check</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-bold text-on-surface">1. Pedido Creado / En cola</span>
+<span class="font-caption text-caption text-on-surface-variant">11:01:14 a. m. • App Móvil PWA</span>
+</div>
+</div>
+<!-- Step 2: Confirmado en Cocina -->
+<div class="relative">
+<div class="absolute -left-6 top-1 w-4 h-4 rounded-full bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[10px]">check</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-bold text-on-surface">2. Comanda Aceptada (KDS)</span>
+<span class="font-caption text-caption text-on-surface-variant">11:02:00 a. m. • Estación Plancha Bloque B</span>
+</div>
+</div>
+<!-- Step 3: En Preparación -->
+<div class="relative">
+<div class="absolute -left-6 top-1 w-4 h-4 rounded-full bg-secondary-container flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[10px]">soup_kitchen</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-bold text-on-surface">3. En Preparación</span>
+<span class="font-caption text-caption text-on-surface-variant">11:02:18 a. m. • Duración prep: 4m 12s</span>
+</div>
+</div>
+<!-- Step 4: Listo para Entrega -->
+<div class="relative">
+<div class="absolute -left-6 top-1 w-4 h-4 rounded-full bg-state-ready-border flex items-center justify-center text-state-ready-text">
+<span class="material-symbols-outlined text-[10px]">notifications_active</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-bold text-on-surface">4. Marcado 'Listo' &amp; Notificación Push</span>
+<span class="font-caption text-caption text-on-surface-variant">11:06:30 a. m. • Alumno alertado vía PWA</span>
+</div>
+</div>
+<!-- Step 5: Entregado -->
+<div class="relative">
+<div class="absolute -left-6 top-1 w-4 h-4 rounded-full bg-tertiary-container flex items-center justify-center text-on-tertiary">
+<span class="material-symbols-outlined text-[10px]">done_all</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-bold text-state-ready-text">5. Despachado &amp; Validado</span>
+<span class="font-caption text-caption text-on-surface-variant">11:07:44 a. m. • Ventanilla 2 (Código QR)</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Drawer Footer Actions -->
+<div class="p-space-md bg-surface-card flex items-center gap-space-sm">
+<button class="w-full py-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-bold transition-all cursor-pointer" onclick="toggleTraceDrawer(null)" type="button">
+        Cerrar Detalle
+      </button>
+<button class="w-full py-2.5 rounded-xl bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md font-bold transition-all flex items-center justify-center gap-1 cursor-pointer" onclick="downloadMockCSV()" type="button">
+<span class="material-symbols-outlined text-[16px]">print</span>
+<span>Imprimir Comanda</span>
+</button>
+</div>
+</aside>
+</div></main></div></body></html>

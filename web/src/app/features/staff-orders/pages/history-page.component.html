@@ -1,0 +1,94 @@
+<section class="staff-main">
+  <div class="staff-header">
+    <div>
+      <span class="eyebrow">REGISTRO OPERATIVO</span>
+      <h1>Historial y entregas</h1>
+      <p>Consulta los pedidos y los eventos registrados.</p>
+    </div>
+    <button class="button button-outline" (click)="vm.loadOrders()"><span class="material-symbol" aria-hidden="true">refresh</span> Actualizar</button>
+  </div>
+  <div class="panel-card table-card">
+    <div class="table-head">
+      <strong>Pedidos recientes</strong><span>{{ vm.historyTotal }} registros</span>
+    </div>
+    <div class="history-controls">
+      <label
+        >Fecha<input
+          type="date"
+          [(ngModel)]="vm.historyDate"
+          (ngModelChange)="vm.historyPage = 1; vm.loadOrders()"
+      /></label>
+      <label
+        >Estado<select
+          [(ngModel)]="vm.historyStatus"
+          (ngModelChange)="vm.historyPage = 1; vm.loadOrders()"
+        >
+          <option value="">Todos</option>
+          <option value="CONFIRMADO">Confirmado</option>
+          <option value="EN_PREPARACION">En preparación</option>
+          <option value="LISTO">Listo</option>
+          <option value="ENTREGADO">Entregado</option>
+          <option value="CANCELADO">Cancelado</option>
+          <option value="RECHAZADO">Rechazado</option>
+        </select></label
+      >
+      <div class="history-pagination" aria-label="Paginación del historial">
+        <button
+          class="button button-outline"
+          [disabled]="vm.historyPage <= 1"
+          (click)="vm.historyPage = vm.historyPage - 1; vm.loadOrders()"
+        >
+          Anterior
+        </button>
+        <span>Página {{ vm.historyPage }}</span>
+        <button
+          class="button button-outline"
+          [disabled]="vm.historyPage * 25 >= vm.historyTotal"
+          (click)="vm.historyPage = vm.historyPage + 1; vm.loadOrders()"
+        >
+          Siguiente
+        </button>
+      </div>    </div>
+    <div class="table-scroll" tabindex="0" role="region" aria-label="Historial de pedidos">
+      <table>
+        <thead>
+          <tr>
+            <th>PEDIDO</th>
+            <th>CLIENTE</th>
+            <th>ESTADO</th>
+            <th>HORA RECOGIDA</th>
+            <th>TOTAL</th>
+            <th>HORA</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of vm.orders">
+            <td>
+              <strong>#{{ vm.orderNumber(order.id) }}</strong>
+            </td>
+            <td>
+              {{ order.customerAlias }}<small>{{ order.customerPhone }}</small>
+            </td>
+            <td>
+              <span class="status-chip" [ngClass]="vm.statusClass(order.status)">{{
+                vm.statusLabel(order.status)
+              }}</span>
+            </td>
+            <td>{{ vm.time(order.slot) }}</td>
+            <td>{{ vm.money(order.totalCop) }}</td>
+            <td>{{ vm.time(order.createdAt) }}</td>
+            <td>
+              <button class="text-button" (click)="vm.openOrderDetails(order)">Bitácora</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+<app-order-detail-dialog
+  *ngIf="vm.selectedOrder"
+  [order]="vm.selectedOrder"
+  (closed)="vm.closeOrderDetails()"
+/>

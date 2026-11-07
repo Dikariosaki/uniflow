@@ -1,0 +1,8 @@
+# Only for the isolated local Supabase stack: permits HTTP JWKS metadata.
+services:
+  api:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      RateLimiting__PublicRequestsPerMinute: 1000
+      # Exercise Supabase's URI format; the .env template also supports Npgsql strings.
+      ConnectionStrings__Supabase: "postgresql://postgres:postgres@host.docker.internal:54322/postgres?sslmode=disable"

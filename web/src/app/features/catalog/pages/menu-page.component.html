@@ -1,0 +1,122 @@
+<section class="menu-content">
+  <div class="welcome-banner">
+    <div>
+      <span class="eyebrow">UNIFLOW · {{ vm.displayBusinessName }}</span>
+      <h1>Tu pausa favorita,<br /><em>sin hacer fila.</em></h1>
+      <p>Explora el menú y recoge tu pedido cuando esté listo.</p>
+    </div>
+    <div class="welcome-art" aria-hidden="true"><span class="material-symbol">local_cafe</span><span class="material-symbol">bakery_dining</span><span class="material-symbol">lunch_dining</span></div>
+  </div>
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">RECIÉN PREPARADO</span>
+      <h2>¿Qué se te antoja?</h2>
+    </div>
+    <span class="open-pill" [class.closed-pill]="!vm.businessStatus.isOpen"
+      ><i></i
+      >{{
+        vm.businessStatus.ordersPaused
+          ? 'Pedidos pausados'
+          : vm.businessStatus.isOpen
+            ? 'Pedidos abiertos'
+            : 'Cafetería cerrada'
+      }}</span
+    >
+  </div>
+  <div class="menu-search-row">
+    <label class="menu-search" for="menu-product-search">
+      <span class="material-symbol" aria-hidden="true">search</span>
+      <input
+        id="menu-product-search"
+        type="search"
+        [ngModel]="vm.searchTerm"
+        (ngModelChange)="vm.setSearchTerm($event)"
+        placeholder="Buscar productos, por ejemplo: pony malta"
+        autocomplete="off"
+        aria-label="Buscar productos del menú"
+      />
+      <button
+        *ngIf="vm.searchTerm"
+        type="button"
+        aria-label="Limpiar búsqueda"
+        (click)="vm.setSearchTerm('')"
+      ><span class="material-symbol" aria-hidden="true">close</span></button>
+    </label>
+    <span class="menu-search-count" *ngIf="vm.searchTerm.trim()" aria-live="polite">
+      {{ vm.visibleProducts.length }} {{ vm.visibleProducts.length === 1 ? 'resultado' : 'resultados' }}
+    </span>
+  </div>
+  <nav class="category-row" aria-label="Categorías">
+    <button [class.selected]="vm.categoryFilter === 'all'" (click)="vm.categoryFilter = 'all'">
+      Todo el menú</button
+    ><button
+      *ngFor="let category of vm.groupedCategories"
+      [class.selected]="vm.categoryFilter === category.id"
+      (click)="vm.categoryFilter = category.id"
+    >
+      {{ category.name }}
+    </button>
+  </nav>
+  <div class="product-grid" *ngIf="vm.visibleProducts.length; else noProducts">
+    <app-product-card
+      *ngFor="let product of vm.visibleProducts"
+      [product]="product"
+      [online]="vm.isOnline"
+      [quantity]="cartVm.quantityFor(product.id)"
+      (added)="cart.add($event)"
+      (quantityChanged)="cart.changeQuantity(product.id, $event)"
+    />
+  </div>
+  <ng-template #noProducts>
+    <div class="empty-state" *ngIf="!vm.products.length; else noSearchResults">
+      <span class="material-symbol" aria-hidden="true">restaurant_menu</span>
+      <h3>{{ vm.isBusy ? 'Cargando el menú…' : 'Aún no hay productos publicados' }}</h3>
+      <p>Vuelve pronto para ver lo que está preparando la cafetería.</p>
+      <button class="button button-outline" (click)="vm.loadMenu()">Actualizar menú</button>
+    </div>
+  </ng-template>
+  <ng-template #noSearchResults>
+    <div class="empty-state menu-no-results">
+      <span class="material-symbol" aria-hidden="true">search_off</span>
+      <h3>No encontramos productos</h3>
+      <p>Prueba con otro nombre o cambia la categoría seleccionada.</p>
+      <button class="button button-outline" (click)="vm.clearFilters()">Limpiar búsqueda y filtros</button>
+    </div>
+  </ng-template>
+  <aside class="menu-cart-dock" *ngIf="cartVm.cartCount" aria-label="Resumen de tu pedido">
+    <section class="menu-cart-popover panel-card" *ngIf="cartVm.menuCartOpen">
+      <header>
+        <div><strong>Tu pedido</strong><small>{{ cartVm.isReserving ? 'Reservando inventario…' : cartVm.cartCount + ' unidades seleccionadas' }}</small></div>
+        <button type="button" class="menu-cart-close" aria-label="Cerrar resumen" (click)="cart.closeMenuCart()"><span class="material-symbol" aria-hidden="true">close</span></button>
+      </header>
+      <div class="menu-cart-line" *ngFor="let line of cartVm.cart">
+        <div class="menu-cart-line-thumb">
+          <img *ngIf="line.product.imageUrl" [src]="line.product.imageUrl" [alt]="line.product.name" loading="lazy" />
+          <span *ngIf="!line.product.imageUrl" class="material-symbol" aria-hidden="true">{{ line.product.categoryName.toLowerCase().includes('beb') ? 'local_cafe' : 'restaurant' }}</span>
+        </div>
+        <div class="menu-cart-line-copy">
+          <strong>{{ line.product.name }}</strong>
+          <small>{{ line.quantity }} x {{ cartVm.money(line.product.priceCop) }} c/u</small>
+        </div>
+        <strong class="menu-cart-line-total">{{ cartVm.money(line.quantity * line.product.priceCop) }}</strong>
+        <div class="menu-cart-quantity">
+          <button type="button" aria-label="Quitar una unidad" (click)="cart.changeQuantity(line.product.id, -1)"><span class="material-symbol" aria-hidden="true">remove</span></button>
+          <span>{{ line.quantity }}</span>
+          <button type="button" aria-label="Agregar una unidad" (click)="cart.changeQuantity(line.product.id, 1)"><span class="material-symbol" aria-hidden="true">add</span></button>
+        </div>
+      </div>
+      <div class="menu-cart-total"><span>Total del pedido</span><strong>{{ cartVm.money(cartVm.cartTotal) }}</strong></div>
+      <button type="button" class="button button-primary menu-cart-go" (click)="cart.goToCart()">Revisar y continuar</button>
+    </section>
+    <button
+      type="button"
+      class="menu-cart-trigger"
+      [attr.aria-expanded]="cartVm.menuCartOpen"
+      (click)="cart.toggleMenuCart()"
+    >
+      <span class="menu-cart-bag" aria-hidden="true"><span class="material-symbol">shopping_bag</span><i>{{ cartVm.cartCount }}</i></span>
+      <span class="menu-cart-trigger-copy"><small>{{ cartVm.isReserving ? 'Actualizando reserva…' : 'Tu pedido · ' + cartVm.cartCount + ' unidades' }}</small><strong>{{ cartVm.money(cartVm.cartTotal) }}</strong></span>
+      <span class="menu-cart-trigger-action">{{ cartVm.menuCartOpen ? 'Ocultar' : 'Ver pedido' }}</span>
+    </button>
+  </aside>
+</section>

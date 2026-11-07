@@ -1,0 +1,149 @@
+<div class="app-frame" [class.staff-mode]="isStaff && page !== 'login'">
+  <header class="topbar">
+    <button
+      class="icon-button mobile-menu"
+      (click)="menuOpen = !menuOpen"
+      [attr.aria-label]="menuOpen ? 'Cerrar menú' : 'Abrir menú'"
+      aria-controls="mobile-navigation"
+      [attr.aria-expanded]="menuOpen"
+    >
+      <span class="material-symbol" aria-hidden="true">menu</span>
+    </button>
+    <a class="brand" href="/" (click)="$event.preventDefault(); go('menu')"
+      ><span class="brand-mark"><img class="brand-symbol" src="/logo-cloche.svg" alt="" /></span
+      ><span><strong>UniFlow</strong><small>Cafetería universitaria</small></span></a
+    >
+    <div class="top-context" *ngIf="page === 'menu' || page === 'cart' || page === 'checkout' || page === 'my-orders'">
+      <span class="material-symbol" aria-hidden="true">location_on</span> Sede Bosque Popular
+    </div>
+    <div class="top-actions">
+      <span class="connection" [class.offline]="!isOnline"
+        ><i></i>{{ isOnline ? 'En línea' : 'Sin conexión' }}</span
+      >
+      <button *ngIf="!role" class="button button-quiet orders-top-button" (click)="go('my-orders')">
+        Mis pedidos
+      </button>
+      <button class="button button-quiet staff-link" (click)="role ? go('queue') : go('login')">
+        {{ role ? 'Panel de personal' : 'Acceso personal' }}
+      </button>
+      <button
+        *ngIf="!role && cartCount"
+        class="button button-primary cart-top-button"
+        (click)="go('cart')"
+      >
+        <span class="material-symbol" aria-hidden="true">shopping_bag</span> Mi pedido · {{ cartCount }}
+      </button>
+      <span *ngIf="role" class="avatar" aria-label="Sesion activa" title="Sesion activa">{{ role === 'administrator' ? 'A' : 'P' }}</span>
+    </div>
+  </header>
+  <button
+    *ngIf="menuOpen"
+    class="drawer-backdrop"
+    aria-label="Cerrar navegación"
+    (click)="menuOpen = false"
+  ></button>
+  <aside id="mobile-navigation" class="mobile-drawer" *ngIf="menuOpen" aria-label="Navegación">
+    <div class="mobile-drawer-heading">
+      <a class="brand side-brand" href="/" (click)="$event.preventDefault(); go('menu')">
+        <span class="brand-mark"><img class="brand-symbol" src="/logo-cloche.svg" alt="" /></span>
+        <span><strong>UniFlow</strong><small>Cafetería universitaria</small></span>
+      </a>
+      <button class="drawer-close" aria-label="Cerrar menú" (click)="menuOpen = false"><span class="material-symbol" aria-hidden="true">close</span></button>
+    </div>
+    <nav class="mobile-drawer-nav">
+      <span class="nav-label">CAFETERÍA</span>
+      <button class="drawer-link" [class.active]="page === 'menu'" (click)="go('menu')">
+        <span class="material-symbol" aria-hidden="true">home</span> Menú principal
+      </button>
+      <button *ngIf="!role" class="drawer-link" [class.active]="page === 'my-orders'" (click)="go('my-orders')">
+        <span class="material-symbol" aria-hidden="true">history</span> Mis pedidos
+      </button>
+      <button *ngIf="!role" class="drawer-link" [class.active]="page === 'cart'" (click)="go('cart')">
+        <span class="material-symbol" aria-hidden="true">shopping_bag</span> Mi pedido <b *ngIf="cartCount">{{ cartCount }}</b>
+      </button>
+      <button *ngIf="!role" class="drawer-link" (click)="go('login')">
+        <span class="material-symbol" aria-hidden="true">admin_panel_settings</span> Acceso del personal
+      </button>
+      <ng-container *ngIf="role">
+        <span class="nav-label drawer-group-label">OPERACIÓN</span>
+        <button class="drawer-link" [class.active]="page === 'queue'" (click)="go('queue')">
+          <span class="material-symbol" aria-hidden="true">receipt_long</span> Pedidos en vivo <b>{{ activeOrders.length }}</b>
+        </button>
+        <button class="drawer-link" [class.active]="page === 'history'" (click)="go('history')">
+          <span class="material-symbol" aria-hidden="true">history</span> Historial y entregas
+        </button>
+        <ng-container *ngIf="role === 'administrator'">
+          <span class="nav-label drawer-group-label">ADMINISTRACIÓN</span>
+          <button class="drawer-link" [class.active]="page === 'inventory'" (click)="go('inventory')">
+            <span class="material-symbol" aria-hidden="true">inventory_2</span> Inventario y menú
+          </button>
+          <button class="drawer-link" [class.active]="page === 'reports'" (click)="go('reports')">
+            <span class="material-symbol" aria-hidden="true">bar_chart</span> Reportes y cupos
+          </button>
+        </ng-container>
+      </ng-container>
+    </nav>
+    <div class="mobile-drawer-footer" *ngIf="role">
+      <button class="drawer-logout" (click)="logout(); menuOpen = false">Cerrar sesión</button>
+    </div>
+  </aside>
+  <div class="notice offline-notice" *ngIf="!isOnline">
+    Estás sin conexión. El menú puede estar desactualizado y no es posible confirmar pedidos.
+  </div>
+  <div class="notice" *ngIf="message" role="status">
+    <span>{{ message }}</span
+    ><button (click)="message = ''" aria-label="Cerrar aviso"><span class="material-symbol" aria-hidden="true">close</span></button>
+  </div>
+  <main [class.customer-layout]="!isStaff" [class.staff-shell]="isStaff">
+    <ng-container *ngIf="isStaff"
+      ><aside class="staff-sidebar" *ngIf="role">
+        <a class="brand side-brand" href="/personal" (click)="$event.preventDefault(); go('queue')"
+          ><span class="brand-mark"><img class="brand-symbol" src="/logo-cloche.svg" alt="" /></span
+          ><span><strong>UniFlow</strong><small>CAFETERÍA OS</small></span></a
+        >
+        <div class="location-card">
+          <span class="material-symbol" aria-hidden="true">location_on</span>
+          <div><strong>Bloque B</strong><small>Sede Bosque Popular</small></div>
+        </div>
+        <nav class="side-nav">
+          <span class="nav-label">OPERACIÓN</span
+          ><button [class.active]="page === 'queue'" (click)="go('queue')">
+            <span class="material-symbol" aria-hidden="true">receipt_long</span><span>Pedidos en vivo</span><b>{{ activeOrders.length }}</b></button
+          ><button [class.active]="page === 'history'" (click)="go('history')">
+            <span class="material-symbol" aria-hidden="true">history</span><span>Historial y entregas</span></button
+          ><ng-container *ngIf="role === 'administrator'"
+            ><span class="nav-label">ADMINISTRACIÓN</span
+            ><button [class.active]="page === 'inventory'" (click)="go('inventory')">
+              <span class="material-symbol" aria-hidden="true">inventory_2</span><span>Inventario y menú</span></button
+            ><button [class.active]="page === 'reports'" (click)="go('reports')">
+              <span class="material-symbol" aria-hidden="true">bar_chart</span><span>Reportes y cupos</span>
+            </button></ng-container
+          >
+        </nav>
+        <div class="sidebar-bottom">
+          <div class="capacity-mini">
+            <div>
+              <small>ÓRDENES ACTIVAS</small><strong>{{ activeOrders.length }}</strong>
+            </div>
+            <span class="material-symbol capacity-status-icon" aria-hidden="true">circle</span>
+          </div>
+          <button class="side-logout" (click)="logout()"><span class="material-symbol" aria-hidden="true">logout</span> Cerrar sesión</button>
+        </div>
+      </aside></ng-container
+    >
+    <router-outlet />
+  </main>
+  <nav class="bottom-nav" *ngIf="!role && ['menu', 'cart', 'my-orders'].includes(page)">
+    <button [class.active]="page === 'menu'" (click)="go('menu')"><span class="material-symbol">home</span>Menú</button
+    ><button [class.active]="page === 'cart'" (click)="go('cart')">
+      <span class="bottom-nav-cart-icon"><span class="material-symbol">shopping_bag</span><i *ngIf="cartCount">{{ cartCount }}</i></span
+      >Mi pedido
+    </button>
+    <button [class.active]="page === 'my-orders'" (click)="go('my-orders')">
+      <span class="material-symbol">history</span>Mis pedidos
+    </button>
+  </nav>
+  <footer class="site-footer" *ngIf="page === 'menu'">
+    <span>Hecho para disfrutar el campus.</span><span>UniFlow · Universidad Libre</span>
+  </footer>
+</div>

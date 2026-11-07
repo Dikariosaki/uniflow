@@ -1,0 +1,126 @@
+<section class="staff-main">
+  <div class="staff-header">
+    <div>
+      <span class="eyebrow">ADMINISTRACIÓN</span>
+      <h1>Inventario y menú</h1>
+      <p>Gestiona categorías, productos, disponibilidad e imágenes.</p>
+    </div>
+    <button class="button button-outline" (click)="vm.loadAdminData()">Actualizar inventario</button>
+  </div>
+  <fieldset class="admin-fields" [disabled]="vm.isLoading">
+    <div class="admin-columns">
+      <div class="panel-card form-card">
+        <h2>Nuevo producto</h2>
+        <form (ngSubmit)="vm.saveProduct()">
+          <label
+            >Categoría<select name="category" [(ngModel)]="vm.productDraft.categoryId" required>
+              <option *ngFor="let category of vm.adminCategories" [value]="category.id">
+                {{ category.name }}
+              </option>
+            </select></label
+          ><label>Nombre<input name="name" [(ngModel)]="vm.productDraft.name" required /></label
+          ><label
+            >Descripción<textarea
+              name="description"
+              [(ngModel)]="vm.productDraft.description"
+              rows="2"
+            ></textarea></label
+          ><label
+            >Precio en COP<input
+              type="number"
+              name="price"
+              min="0"
+              [(ngModel)]="vm.productDraft.priceCop"
+              required /></label
+          ><label
+            >Unidades en inventario<input
+              type="number"
+              name="stockQuantity"
+              min="0"
+              step="1"
+              [(ngModel)]="vm.productDraft.stockQuantity"
+              required /></label
+          ><label class="check-label"
+            ><input type="checkbox" name="available" [(ngModel)]="vm.productDraft.available" />
+            Disponible para pedidos</label
+          ><button class="button button-primary">Guardar producto</button>
+        </form>
+        <hr />
+        <h2>Nueva categoría</h2>
+        <form class="inline-form" (ngSubmit)="vm.addCategory()">
+          <input
+            name="categoryName"
+            [(ngModel)]="vm.categoryDraft.name"
+            placeholder="Ej. Bebidas"
+            required
+          /><button class="button button-outline">Agregar</button>
+        </form>
+        <div class="category-admin" *ngFor="let category of vm.adminCategories">
+          <span>{{ category.name }}</span
+          ><button class="text-button" (click)="vm.editCategory(category)">Editar</button>
+          <button class="text-button" (click)="vm.toggleCategory(category)">
+            {{ category.active ? 'Ocultar' : 'Publicar' }}
+          </button>
+        </div>
+      </div>
+      <div class="panel-card catalog-admin">
+        <div class="table-head">
+          <strong>Productos publicados</strong><span>{{ vm.adminProducts.length }} productos</span>
+        </div>
+        <article
+          class="admin-product"
+          *ngFor="let product of vm.adminProducts; trackBy: vm.trackProduct"
+        >
+          <div class="admin-thumb">
+            <img *ngIf="product.imageUrl" [src]="product.imageUrl" [alt]="product.name" /><span
+              *ngIf="!product.imageUrl"
+              class="material-symbol" aria-hidden="true">restaurant</span
+            >
+          </div>
+          <div class="admin-product-copy">
+            <strong>{{ product.name }}</strong
+            ><small>{{ product.categoryName }} · {{ vm.money(product.priceCop) }}</small
+            ><div class="inventory-summary">
+              <span class="inventory-count">{{ product.availableQuantity ?? product.stockQuantity ?? 0 }} libres</span>
+              <span class="inventory-reserved" *ngIf="(product.reservedQuantity ?? 0) > 0">{{ product.reservedQuantity }} reservadas</span>
+              <span
+                class="inventory-status"
+                [class.in-stock]="product.available && (product.availableQuantity ?? product.stockQuantity ?? 0) > 0"
+                >{{ !product.available ? 'Deshabilitado' : (product.availableQuantity ?? product.stockQuantity ?? 0) > 0 ? 'Disponible' : (product.stockQuantity ?? 0) > 0 ? 'Reservado' : 'Agotado' }}</span
+              >
+            </div>
+            <label class="availability-toggle"
+              ><input
+                type="checkbox"
+                [checked]="product.available"
+                (change)="vm.toggleProduct(product, $event)"
+              />
+              Habilitar pedidos</label>
+          </div>
+          <div class="admin-product-actions">
+            <button class="text-button" (click)="vm.editProduct(product)">Editar</button>
+            <button class="text-button" (click)="vm.toggleProductActive(product)">
+              {{ product.active ? 'Ocultar' : 'Publicar' }}
+            </button>
+            <label class="button button-outline upload-button"
+              >Subir foto<input
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                (change)="vm.uploadImage(product, $event)"
+            /></label>
+          </div>
+        </article>
+        <p class="helper-text">
+          JPG, PNG o WebP. Se optimiza y convierte a WebP antes de subir; imagen original hasta 20 MB y archivo optimizado hasta 5 MB.
+        </p>
+      </div>
+    </div>
+  </fieldset>
+</section>
+<app-form-dialog
+  [config]="vm.formDialog"
+  [saving]="vm.dialogSaving"
+  [errorMessage]="vm.dialogError"
+  (saved)="vm.saveDialog($event)"
+  (cancelled)="vm.closeDialog()"
+/>

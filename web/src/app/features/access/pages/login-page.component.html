@@ -1,0 +1,80 @@
+<section class="staff-main">
+  <div class="login-card panel-card">
+    <span class="brand-mark large"><img class="brand-symbol" src="/logo-cloche.svg" alt="" /></span><span class="eyebrow">UNIFLOW · PERSONAL</span>
+    <h1>
+      {{
+        vm.passwordSetup
+          ? vm.recoveryMode
+            ? 'Restablece tu contraseña'
+            : 'Crea tu contraseña'
+          : vm.loginMode === 'forgot'
+            ? 'Recupera tu contraseña'
+            : vm.loginMode === 'sent'
+              ? 'Revisa tu correo'
+              : 'Bienvenido de nuevo'
+      }}
+    </h1>
+    <p>
+      {{
+        vm.passwordSetup
+          ? vm.recoveryMode
+            ? 'Elige una nueva contraseña para tu cuenta.'
+            : 'Define una contraseña para activar el acceso al panel.'
+          : vm.loginMode === 'forgot'
+            ? 'Te enviaremos un enlace para que crees una nueva contraseña.'
+            : vm.loginMode === 'sent'
+              ? 'Si el correo corresponde a una cuenta del personal, recibirás un enlace para restablecer la contraseña.'
+              : 'Ingresa para administrar los pedidos de la cafetería.'
+      }}
+    </p>
+    <p role="status" *ngIf="vm.message">{{ vm.message }}</p>
+    <form *ngIf="!vm.passwordSetup && vm.loginMode === 'login'" (ngSubmit)="vm.login()">
+      <label
+        >Correo electrónico<input
+          type="email"
+          name="email"
+          [(ngModel)]="vm.email"
+          autocomplete="username"
+          required /></label
+      ><label
+        >Contraseña<input
+          type="password"
+          name="password"
+          [(ngModel)]="vm.password"
+          autocomplete="current-password"
+          required /></label
+      ><button class="button button-primary" [disabled]="vm.isBusy">
+        {{ vm.isBusy ? 'Ingresando…' : 'Iniciar sesión' }}
+      </button>
+      <button type="button" class="button" (click)="vm.showForgotPassword()">Olvidé mi contraseña</button>
+    </form>
+    <form *ngIf="vm.loginMode === 'forgot'" (ngSubmit)="vm.requestPasswordReset()">
+      <label
+        >Correo electrónico<input
+          type="email"
+          name="recoveryEmail"
+          [(ngModel)]="vm.email"
+          autocomplete="username"
+          required /></label
+      ><button class="button button-primary" [disabled]="vm.isBusy">
+        {{ vm.isBusy ? 'Enviando…' : 'Enviar enlace de recuperación' }}
+      </button>
+      <button type="button" class="button" (click)="vm.showLogin()">Volver al inicio de sesión</button>
+    </form>
+    <button *ngIf="vm.loginMode === 'sent'" type="button" class="button" (click)="vm.showLogin()">Volver al inicio de sesión</button>
+    <form *ngIf="vm.passwordSetup" (ngSubmit)="vm.setPassword()">
+      <label
+        >Nueva contraseña<input
+          type="password"
+          name="newPassword"
+          [(ngModel)]="vm.password"
+          autocomplete="new-password"
+          minlength="8"
+          required /></label
+      ><button class="button button-primary" [disabled]="vm.isBusy">
+        {{ vm.isBusy ? 'Guardando…' : 'Guardar contraseña' }}
+      </button>
+    </form>
+    <small>Acceso exclusivo para el personal autorizado.</small>
+  </div>
+</section>
