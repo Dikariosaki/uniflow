@@ -20,17 +20,17 @@ internal sealed class StockReservationCleanupService(
                 var db = scope.ServiceProvider.GetRequiredService<UniFlowDbContext>();
                 await db.Database.ExecuteSqlInterpolatedAsync($"""
                     WITH expired AS (
-                        SELECT \"CartToken\", \"ProductId\"
+                        SELECT "CartToken", "ProductId"
                         FROM stock_reservations
-                        WHERE \"ExpiresAt\" <= {DateTimeOffset.UtcNow}
-                        ORDER BY \"ExpiresAt\"
+                        WHERE "ExpiresAt" <= {DateTimeOffset.UtcNow}
+                        ORDER BY "ExpiresAt"
                         LIMIT 500
                         FOR UPDATE SKIP LOCKED
                     )
                     DELETE FROM stock_reservations AS reservations
                     USING expired
-                    WHERE reservations.\"CartToken\" = expired.\"CartToken\"
-                      AND reservations.\"ProductId\" = expired.\"ProductId\"
+                    WHERE reservations."CartToken" = expired."CartToken"
+                      AND reservations."ProductId" = expired."ProductId"
                     """, stoppingToken);
             }
             catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
