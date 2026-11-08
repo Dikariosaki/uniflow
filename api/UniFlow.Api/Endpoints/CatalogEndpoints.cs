@@ -13,8 +13,8 @@ public static class CatalogEndpoints
             (await useCases.GetCatalogCategories(ct)).ToHttpResult(context));
         group.MapGet("/status", async (CancellationToken ct, CatalogUseCases useCases, HttpContext context) =>
             (await useCases.GetStatus(ct)).ToHttpResult(context));
-        group.MapGet("/catalog/products", async (CancellationToken ct, CatalogUseCases useCases, HttpContext context) =>
-            (await useCases.GetCatalogProducts(ct)).ToHttpResult(context));
+        group.MapGet("/catalog/products", async (string? search, Guid? categoryId, int? page, int? pageSize, CancellationToken ct, CatalogUseCases useCases, HttpContext context) =>
+            (await useCases.GetCatalogProducts(search, categoryId, page, pageSize, ct)).ToHttpResult(context));
         group.MapGet("/pickup-slots", async (DateOnly date, CancellationToken ct, CatalogUseCases useCases, HttpContext context) =>
             (await useCases.GetPickupSlots(date, ct)).ToHttpResult(context));
     }

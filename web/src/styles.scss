@@ -419,6 +419,18 @@ router-outlet {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
 }
+.catalog-load-more {
+  display: grid;
+  min-height: 1.5rem;
+  place-items: center;
+  padding: 0.75rem;
+  color: #696b7f;
+  font-size: 0.875rem;
+}
+.catalog-load-more-button {
+  display: block;
+  margin: 0 auto 1.5rem;
+}
 .product-card {
   overflow: hidden;
   background: white;

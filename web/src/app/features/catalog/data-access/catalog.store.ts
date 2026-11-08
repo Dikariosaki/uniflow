@@ -10,10 +10,13 @@ export class CatalogStore extends FeatureStore {
   searchTerm = '';
   categories: Category[] = [];
   products: Product[] = [];
-  private visibleProductsCache: Product[] = [];
-  private cachedSource: Product[] | null = null;
-  private cachedCategoryFilter = '';
-  private cachedSearchQuery = '';
+  productTotal = 0;
+  hasMoreProducts = false;
+  isLoadingMore = false;
+  private page = 0;
+  private readonly pageSize = 24;
+  private queryVersion = 0;
+  private searchTimer?: ReturnType<typeof setTimeout>;
   businessStatus = { name: 'Cafetería Bloque B', isOpen: false, ordersPaused: false };
   catalogFresh = false;
   get displayBusinessName() {
@@ -27,41 +30,25 @@ export class CatalogStore extends FeatureStore {
     this.notifyChange();
   }
   get visibleProducts() {
-    const query = this.normalizeSearch(this.searchTerm);
-    if (
-      this.cachedSource === this.products &&
-      this.cachedCategoryFilter === this.categoryFilter &&
-      this.cachedSearchQuery === query
-    ) return this.visibleProductsCache;
-    const terms = query.split(/\s+/).filter(Boolean);
-    this.visibleProductsCache = this.products.filter((product) => {
-      if (this.categoryFilter !== 'all' && product.categoryId !== this.categoryFilter) return false;
-      if (!terms.length) return true;
-      const searchable = this.normalizeSearch(
-        `${product.name} ${product.description} ${product.categoryName}`,
-      );
-      return terms.every((term) => searchable.includes(term));
-    });
-    this.cachedSource = this.products;
-    this.cachedCategoryFilter = this.categoryFilter;
-    this.cachedSearchQuery = query;
-    return this.visibleProductsCache;
+    return this.products;
   }
   setSearchTerm(value: string) {
     this.searchTerm = value;
     this.notifyChange();
+    clearTimeout(this.searchTimer);
+    this.searchTimer = setTimeout(() => void this.loadProductPage(true), 250);
+  }
+  setCategoryFilter(value: string) {
+    if (this.categoryFilter === value) return;
+    clearTimeout(this.searchTimer);
+    this.categoryFilter = value;
+    void this.loadProductPage(true);
   }
   clearFilters() {
     this.searchTerm = '';
     this.categoryFilter = 'all';
-    this.notifyChange();
-  }
-  private normalizeSearch(value: string) {
-    return value
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLocaleLowerCase('es')
-      .trim();
+    clearTimeout(this.searchTimer);
+    void this.loadProductPage(true);
   }
   get groupedCategories() {
     return this.categories;
@@ -72,16 +59,15 @@ export class CatalogStore extends FeatureStore {
       this.isBusy = true;
       this.message = '';
       try {
-        const [categories, products, status] = await Promise.all([
+        const [categories, status] = await Promise.all([
           this.api.get<Category[]>('/catalog/categories'),
-          this.api.get<Product[]>('/catalog/products'),
           this.api.get<{ name: string; isOpen: boolean; ordersPaused: boolean }>('/status'),
         ]);
         this.categories = categories;
-        this.products = products;
         this.businessStatus = status;
         this.catalogFresh = true;
         this.isOnline = navigator.onLine;
+        await this.loadProductPage(true);
       } catch (e) {
         if ((e as { status?: number }).status === 0) this.isOnline = false;
         this.message = this.errorText(
@@ -93,6 +79,52 @@ export class CatalogStore extends FeatureStore {
       }
     } finally {
       this.notifyChange();
+    }
+  }
+
+  async loadNextProductPage() {
+    if (!this.hasMoreProducts || this.isBusy || this.isLoadingMore) return;
+    await this.loadProductPage(false);
+  }
+
+  private async loadProductPage(reset: boolean) {
+    const version = ++this.queryVersion;
+    if (reset) {
+      this.page = 0;
+      this.products = [];
+      this.productTotal = 0;
+      this.hasMoreProducts = false;
+      this.isLoadingMore = false;
+      this.isBusy = true;
+    } else {
+      this.isLoadingMore = true;
+    }
+    this.message = '';
+    this.notifyChange();
+
+    try {
+      const requestedPage = reset ? 1 : this.page + 1;
+      const params: Record<string, string> = {
+        page: String(requestedPage),
+        pageSize: String(this.pageSize),
+      };
+      if (this.searchTerm.trim()) params['search'] = this.searchTerm.trim();
+      if (this.categoryFilter !== 'all') params['categoryId'] = this.categoryFilter;
+      const result = await this.api.getPage<Product>('/catalog/products', params);
+      if (version !== this.queryVersion) return;
+      this.products = reset ? result.items : [...this.products, ...result.items];
+      this.page = requestedPage;
+      this.productTotal = result.total;
+      this.hasMoreProducts = this.products.length < result.total;
+      this.catalogFresh = true;
+    } catch (error) {
+      if (version === this.queryVersion) this.message = this.errorText(error, 'No pudimos cargar los productos. Intenta de nuevo.');
+    } finally {
+      if (version === this.queryVersion) {
+        this.isBusy = false;
+        this.isLoadingMore = false;
+        this.notifyChange();
+      }
     }
   }
 }

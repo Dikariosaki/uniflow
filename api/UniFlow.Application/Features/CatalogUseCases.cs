@@ -21,10 +21,27 @@ public sealed class CatalogUseCases(IApplicationStore db, IProductImageStorage s
         return UseCaseResult.Ok(new { name = settings?.Name ?? "Cafetería Bloque B", isOpen = !await db.BusinessSettings.ReadOnly().Where(x => x.Id == 1).Select(x => x.OrdersPaused).FirstOrDefaultAsync(ct) && await IsOpenAt(db, now, ct), ordersPaused = settings?.OrdersPaused ?? false, timeZone = "America/Bogota" });
     }
 
-    public async Task<UseCaseResult> GetCatalogProducts(CancellationToken ct)
+    public async Task<UseCaseResult> GetCatalogProducts(string? search, Guid? categoryId, int? page, int? pageSize, CancellationToken ct)
     {
-        var products = await db.Products.ReadOnly().Where(x => x.Active && x.Category!.Active).OrderBy(x => x.Name).Select(x => new { x.Id, x.CategoryId, categoryName = x.Category!.Name, x.Name, x.Description, x.PriceCop, x.Available, x.StockQuantity, x.ImagePath }).ToListAsync(ct);
-        return UseCaseResult.Ok(products.Select(x => new { x.Id, x.CategoryId, x.categoryName, x.Name, x.Description, x.PriceCop, available = x.Available && x.StockQuantity > 0, imageUrl = storage.PublicUrl(x.ImagePath) }));
+        var query = db.Products.ReadOnly().Where(x => x.Active && x.Category!.Active);
+        if (categoryId is not null) query = query.Where(x => x.CategoryId == categoryId);
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            foreach (var term in search.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+            {
+                var normalizedTerm = term.ToLowerInvariant();
+                query = query.Where(x => x.Name.ToLower().Contains(normalizedTerm) || x.Description.ToLower().Contains(normalizedTerm) || x.Category!.Name.ToLower().Contains(normalizedTerm));
+            }
+        }
+
+        var totalCount = await query.CountAsync(ct);
+        var currentPage = Math.Max(1, page ?? 1);
+        var size = Math.Clamp(pageSize ?? 24, 1, 60);
+        var products = await query.OrderBy(x => x.Name).ThenBy(x => x.Id)
+            .Skip((currentPage - 1) * size).Take(size)
+            .Select(x => new { x.Id, x.CategoryId, categoryName = x.Category!.Name, x.Name, x.Description, x.PriceCop, x.Available, x.StockQuantity, x.ImagePath })
+            .ToListAsync(ct);
+        return UseCaseResult.Ok(products.Select(x => new { x.Id, x.CategoryId, x.categoryName, x.Name, x.Description, x.PriceCop, available = x.Available && x.StockQuantity > 0, imageUrl = storage.PublicUrl(x.ImagePath) })).WithTotalCount(totalCount);
     }
 
     public async Task<UseCaseResult> GetPickupSlots(DateOnly date, CancellationToken ct)

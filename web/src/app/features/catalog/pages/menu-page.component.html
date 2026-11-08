@@ -43,16 +43,16 @@
       ><span class="material-symbol" aria-hidden="true">close</span></button>
     </label>
     <span class="menu-search-count" *ngIf="vm.searchTerm.trim()" aria-live="polite">
-      {{ vm.visibleProducts.length }} {{ vm.visibleProducts.length === 1 ? 'resultado' : 'resultados' }}
+      {{ vm.productTotal }} {{ vm.productTotal === 1 ? 'resultado' : 'resultados' }}
     </span>
   </div>
   <nav class="category-row" aria-label="Categorías">
-    <button [class.selected]="vm.categoryFilter === 'all'" (click)="vm.categoryFilter = 'all'">
+    <button [class.selected]="vm.categoryFilter === 'all'" (click)="vm.setCategoryFilter('all')">
       Todo el menú</button
     ><button
       *ngFor="let category of vm.groupedCategories"
       [class.selected]="vm.categoryFilter === category.id"
-      (click)="vm.categoryFilter = category.id"
+      (click)="vm.setCategoryFilter(category.id)"
     >
       {{ category.name }}
     </button>
@@ -67,8 +67,17 @@
       (quantityChanged)="cart.changeQuantity(product.id, $event)"
     />
   </div>
+  <div #loadMoreTarget class="catalog-load-more" aria-live="polite">
+    <span *ngIf="vm.isLoadingMore">Cargando más productos…</span>
+  </div>
+  <button
+    class="button button-outline catalog-load-more-button"
+    *ngIf="vm.hasMoreProducts && !vm.isLoadingMore"
+    type="button"
+    (click)="vm.loadNextProductPage()"
+  >Cargar más productos</button>
   <ng-template #noProducts>
-    <div class="empty-state" *ngIf="!vm.products.length; else noSearchResults">
+    <div class="empty-state" *ngIf="vm.isBusy || (!vm.searchTerm.trim() && vm.categoryFilter === 'all' && vm.productTotal === 0); else noSearchResults">
       <span class="material-symbol" aria-hidden="true">restaurant_menu</span>
       <h3>{{ vm.isBusy ? 'Cargando el menú…' : 'Aún no hay productos publicados' }}</h3>
       <p>Vuelve pronto para ver lo que está preparando la cafetería.</p>
