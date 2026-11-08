@@ -65,7 +65,7 @@ export class OperationsAdminStore extends FeatureStore {
               closed: boolean;
             }>;
           }>('/admin/schedule'),
-          this.api.get<Slot[]>('/admin/pickup-slots', { date }),
+          this.api.get<Slot[]>('/admin/pickup-slots', { date: this.slotGeneration.date }),
           this.api.get<
             Array<{
               id: string;

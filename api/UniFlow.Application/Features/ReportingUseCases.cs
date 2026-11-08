@@ -1,4 +1,5 @@
 using System.Text;
+using System.Globalization;
 using System.Security.Cryptography;
 using UniFlow.Application.Abstractions;
 using UniFlow.Application.Common;
@@ -31,8 +32,29 @@ public sealed class ReportingUseCases(IApplicationStore db, ICurrentUser user)
         if (!await HasStaffRole(user, db, ct, "administrator")) return UseCaseResult.Forbid();
         var day = date ?? DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("America/Bogota")).DateTime); var from = BogotaDayStart(day); var to = BogotaDayStart(day.AddDays(1));
         var orders = await db.Orders.ReadOnly().Where(o => o.CreatedAt >= from && o.CreatedAt < to).OrderBy(o => o.CreatedAt).ToListAsync(ct);
-        var csv = new StringBuilder("id,codigo,estado,alias,total_cop,creado_utc,items\n");
-        foreach (var o in orders) csv.AppendLine(string.Join(',', new[] { o.Id.ToString(), o.PickupCode, o.Status, o.CustomerAlias, o.TotalCop.ToString(), o.CreatedAt.ToString("O"), string.Join("; ", o.Items.Select(i => $"{i.NameSnapshot} x{i.Quantity}")) }.Select(CsvCell)));
-        return UseCaseResult.File(Encoding.UTF8.GetBytes(csv.ToString()), "text/csv; charset=utf-8", $"uniflow-orders-{day:yyyy-MM-dd}.csv");
+        var zone = TimeZoneInfo.FindSystemTimeZoneById("America/Bogota");
+        var csv = new StringBuilder();
+        AppendCsvRow(csv, "ID del pedido", "Código de recogida", "Estado", "Cliente", "Total (COP)", "Fecha de creación (Bogotá)", "Detalle de productos");
+        foreach (var order in orders)
+        {
+            var createdAt = TimeZoneInfo.ConvertTime(order.CreatedAt, zone).ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+            var items = string.Join(" | ", order.Items.Select(item =>
+                $"{item.NameSnapshot} × {item.Quantity} × {item.UnitPriceCop.ToString(CultureInfo.InvariantCulture)} COP = {item.SubtotalCop.ToString(CultureInfo.InvariantCulture)} COP"));
+            AppendCsvRow(csv,
+                order.Id.ToString(),
+                order.PickupCode,
+                order.Status,
+                order.CustomerAlias,
+                order.TotalCop.ToString(CultureInfo.InvariantCulture),
+                createdAt,
+                items);
+        }
+
+        var utf8 = new UTF8Encoding(encoderShouldEmitUTF8Identifier: true);
+        var file = utf8.GetPreamble().Concat(utf8.GetBytes(csv.ToString())).ToArray();
+        return UseCaseResult.File(file, "text/csv; charset=utf-8; header=present", $"uniflow-pedidos-{day:yyyy-MM-dd}.csv");
     }
+
+    private static void AppendCsvRow(StringBuilder csv, params string[] values) =>
+        csv.AppendJoin(';', values.Select(CsvCell)).Append("\r\n");
 }
