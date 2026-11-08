@@ -1,12 +1,26 @@
 {
-  "name": "UniFlow · Cafetería universitaria",
+  "id": "/",
+  "name": "UniFlow - Cafeteria universitaria",
   "short_name": "UniFlow",
-  "description": "Pide con anticipación y recoge en la cafetería de la Universidad Libre.",
+  "description": "Pide con anticipacion y recoge tu pedido en la cafeteria de la Universidad Libre.",
   "lang": "es-CO",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#f8f9fd",
   "theme_color": "#4338ca",
-  "icons": [{ "src": "/uniflow.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+  "icons": [
+    {
+      "src": "/uniflow-icon-192-v2.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/uniflow-icon-512-v2.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }

@@ -1,9 +1,18 @@
-const CACHE = 'uniflow-shell-v3';
+const CACHE = 'uniflow-shell-v4';
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches
       .open(CACHE)
-      .then((cache) => cache.addAll(['/', '/manifest.webmanifest', '/uniflow.svg', '/logo-cloche.svg', '/config.js'])),
+      .then((cache) => cache.addAll([
+        '/',
+        '/manifest.webmanifest',
+        '/uniflow-icon-192-v2.png',
+        '/uniflow-icon-512-v2.png',
+        '/uniflow-apple-touch-v2.png',
+        '/favicon-uniflow-v2.ico',
+        '/logo-cloche.svg',
+        '/config.js',
+      ])),
   );
   self.skipWaiting();
 });
