@@ -298,6 +298,7 @@ export class OperationsAdminStore extends FeatureStore {
       'business_settings.updated': 'Configuración actualizada',
       'pickup_slot.created': 'Horario de recogida creado',
       'pickup_slot.updated': 'Horario de recogida actualizado',
+      'pickup_slots.generated': 'Franjas de recogida generadas',
       'category.created': 'Categoría creada',
       'category.updated': 'Categoría actualizada',
       'product.created': 'Producto creado',
