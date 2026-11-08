@@ -41,6 +41,64 @@ public sealed class OperationsAdministrationUseCases(IApplicationStore db, ICurr
         return UseCaseResult.Ok(await db.PickupSlots.Where(s => s.StartsAt >= start && s.StartsAt < end).OrderBy(s => s.StartsAt).ToListAsync(ct));
     }
 
+    public async Task<UseCaseResult> GeneratePickupSlots(GeneratePickupSlotsInput input, CancellationToken ct)
+    {
+        if (!await HasStaffRole(user, db, ct, "administrator")) return UseCaseResult.Forbid();
+        if (input.IntervalMinutes is < 5 or > 240 || input.Capacity is < 1 or > 10000)
+            return UseCaseResult.Failure("La duración debe estar entre 5 y 240 minutos y la capacidad entre 1 y 10.000 pedidos.", kind: OutcomeKind.ValidationFailed);
+
+        var exception = await db.OpeningHours.FirstOrDefaultAsync(h => h.Date == input.Date, ct);
+        var weekday = (int)input.Date.ToDateTime(TimeOnly.MinValue).DayOfWeek;
+        var opening = exception ?? await db.OpeningHours.FirstOrDefaultAsync(h => h.Date == null && h.Weekday == weekday, ct);
+        if (opening is null || opening.Closed || opening.ClosesAt <= opening.OpensAt)
+            return UseCaseResult.Failure("No hay un horario de atención abierto para esa fecha. Guarda primero el horario semanal o configura una excepción.", kind: OutcomeKind.ValidationFailed);
+
+        var zone = TimeZoneInfo.FindSystemTimeZoneById("America/Bogota");
+        var localStart = input.Date.ToDateTime(opening.OpensAt, DateTimeKind.Unspecified);
+        var localEnd = input.Date.ToDateTime(opening.ClosesAt, DateTimeKind.Unspecified);
+        var nowLocal = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, zone).DateTime;
+        var candidates = new List<PickupSlot>();
+        var cursor = localStart;
+        while (cursor < localEnd)
+        {
+            var next = cursor.AddMinutes(input.IntervalMinutes);
+            if (next > localEnd) next = localEnd;
+            if (cursor >= nowLocal)
+            {
+                var startsAt = new DateTimeOffset(TimeZoneInfo.ConvertTimeToUtc(cursor, zone));
+                var endsAt = new DateTimeOffset(TimeZoneInfo.ConvertTimeToUtc(next, zone));
+                candidates.Add(new PickupSlot { StartsAt = startsAt, EndsAt = endsAt, Capacity = input.Capacity });
+            }
+            cursor = next;
+        }
+
+        if (candidates.Count == 0)
+            return UseCaseResult.Failure("El horario de esa fecha ya terminó; elige una fecha futura.", kind: OutcomeKind.ValidationFailed);
+
+        await using var tx = await db.BeginTransactionAsync(ct);
+        await db.LockSlotAdministrationAsync(ct);
+        var rangeStart = candidates[0].StartsAt;
+        var rangeEnd = candidates[^1].EndsAt;
+        var existing = await db.PickupSlots.ReadOnly()
+            .Where(s => s.Active && s.StartsAt < rangeEnd && rangeStart < s.EndsAt)
+            .ToListAsync(ct);
+        var conflict = candidates.FirstOrDefault(candidate =>
+            existing.Any(slot => slot.StartsAt < candidate.EndsAt && candidate.StartsAt < slot.EndsAt));
+        if (conflict is not null)
+        {
+            var conflictStart = TimeZoneInfo.ConvertTime(conflict.StartsAt, zone);
+            var conflictEnd = TimeZoneInfo.ConvertTime(conflict.EndsAt, zone);
+            return UseCaseResult.Failure($"Ya existe una franja activa que se cruza con {conflictStart:HH:mm}–{conflictEnd:HH:mm} (hora de Bogotá). No se creó ninguna.", kind: OutcomeKind.Conflict);
+        }
+
+        db.PickupSlots.AddRange(candidates);
+        AddAdminAudit(db, user, "pickup_slots.generated", "pickup_slot", input.Date.ToString("yyyy-MM-dd"),
+            $"date={input.Date:yyyy-MM-dd}; slots={candidates.Count}; interval_minutes={input.IntervalMinutes}; capacity={input.Capacity}");
+        await db.SaveChangesAsync(ct);
+        await tx.CommitAsync(ct);
+        return UseCaseResult.Ok(new { date = input.Date, createdCount = candidates.Count, slots = candidates });
+    }
+
     public async Task<UseCaseResult> PostPickupSlots(SlotInput input, CancellationToken ct)
     {
         if (!await HasStaffRole(user, db, ct, "administrator")) return UseCaseResult.Forbid();

@@ -19,6 +19,8 @@ public static class OperationsAdministrationEndpoints
             (await useCases.GetPickupSlots(date, ct)).ToHttpResult(context));
         group.MapPost("/pickup-slots", async (SlotInput input, CancellationToken ct, OperationsAdministrationUseCases useCases, HttpContext context) =>
             (await useCases.PostPickupSlots(input, ct)).ToHttpResult(context));
+        group.MapPost("/pickup-slots/generate", async (GeneratePickupSlotsInput input, CancellationToken ct, OperationsAdministrationUseCases useCases, HttpContext context) =>
+            (await useCases.GeneratePickupSlots(input, ct)).ToHttpResult(context));
         group.MapPut("/pickup-slots/{id:guid}", async (Guid id, SlotInput input, CancellationToken ct, OperationsAdministrationUseCases useCases, HttpContext context) =>
             (await useCases.PutPickupSlotsById(id, input, ct)).ToHttpResult(context));
     }

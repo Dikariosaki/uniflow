@@ -12,7 +12,12 @@ export class OperationsAdminStore extends FeatureStore {
   private readonly auth = inject(AuthService);
   report: Record<string, number | string> | null = null;
   adminSlots: Slot[] = [];
-  slotDraft = { startsAt: '', endsAt: '', capacity: 0 };
+  slotGeneration = {
+    date: new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Bogota' }).format(new Date()),
+    intervalMinutes: 0,
+    capacity: 0,
+  };
+  isGeneratingSlots = false;
   settings = { name: 'Cafetería Bloque B', ordersPaused: false, minimumNoticeMinutes: 0 };
   weekdays = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
   openingHours = this.weekdays.map((_, weekday) => ({
@@ -47,9 +52,6 @@ export class OperationsAdminStore extends FeatureStore {
     this.notifyChange();
     try {
       try {
-        const date = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Bogota' }).format(
-          new Date(),
-        );
         const [report, members, schedule, slots, auditEvents] = await Promise.all([
           this.api.get<Record<string, number | string>>('/admin/reports/daily'),
           this.api.get<Array<{ userId: string; email: string | null; role: string; active: boolean }>>('/admin/staff'),
@@ -123,7 +125,8 @@ export class OperationsAdminStore extends FeatureStore {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'uniflow-orders.csv';
+        const filename = response.headers.get('Content-Disposition')?.match(/filename="?([^";]+)"?/i)?.[1];
+        a.download = filename ?? 'uniflow-pedidos.csv';
         a.click();
         URL.revokeObjectURL(url);
       } catch (e) {
@@ -168,6 +171,19 @@ export class OperationsAdminStore extends FeatureStore {
       this.notifyChange();
     }
   }
+  async loadSlotsForDate() {
+    if (!this.slotGeneration.date) return;
+    try {
+      this.adminSlots = await this.api.get<Slot[]>('/admin/pickup-slots', {
+        date: this.slotGeneration.date,
+      });
+      this.message = '';
+    } catch (e) {
+      this.message = this.errorText(e, 'No se pudieron cargar las franjas de esa fecha.');
+    } finally {
+      this.notifyChange();
+    }
+  }
   async addException() {
     try {
       if (!this.exceptionDraft.date) return;
@@ -201,23 +217,27 @@ export class OperationsAdminStore extends FeatureStore {
       this.notifyChange();
     }
   }
-  async createSlot() {
+  async generateSlotsFromSchedule() {
+    if (this.isGeneratingSlots) return;
+    this.isGeneratingSlots = true;
+    this.message = '';
+    this.notifyChange();
     try {
-      // datetime-local fields represent cafeteria time, independent of the staff device timezone.
-      const startsAt = new Date(`${this.slotDraft.startsAt}-05:00`).toISOString(),
-        endsAt = new Date(`${this.slotDraft.endsAt}-05:00`).toISOString();
-      try {
-        await this.api.post('/admin/pickup-slots', {
-          startsAt,
-          endsAt,
-          capacity: Number(this.slotDraft.capacity),
-        });
-        this.message = 'Franja creada.';
-        await this.loadReport();
-      } catch (e) {
-        this.message = this.errorText(e, 'No se pudo crear la franja.');
-      }
+      const result = await this.api.post<{ createdCount: number }>(
+        '/admin/pickup-slots/generate',
+        {
+          date: this.slotGeneration.date,
+          intervalMinutes: Number(this.slotGeneration.intervalMinutes),
+          capacity: Number(this.slotGeneration.capacity),
+        },
+      );
+      const confirmation = `Se crearon ${result.createdCount} franjas para ${this.slotGeneration.date}.`;
+      await this.loadSlotsForDate();
+      this.message = confirmation;
+    } catch (e) {
+      this.message = this.errorText(e, 'No se pudieron generar las franjas.');
     } finally {
+      this.isGeneratingSlots = false;
       this.notifyChange();
     }
   }

@@ -3,10 +3,11 @@
     <div>
       <span class="eyebrow">ADMINISTRACIÓN</span>
       <h1>Reportes y cupos</h1>
-      <p>Consulta la actividad y configura horarios de recogida.</p>
+      <p>Consulta la actividad y configura cuándo pueden pedir y recoger.</p>
     </div>
     <button class="button button-outline" (click)="vm.loadReport()"><span class="material-symbol" aria-hidden="true">refresh</span> Actualizar métricas</button>
   </div>
+  <p class="admin-feedback" role="status" aria-live="polite" *ngIf="vm.message">{{ vm.message }}</p>
   <fieldset class="admin-fields" [disabled]="vm.isLoading">
     <div class="metric-row" *ngIf="vm.report">
       <article class="metric-card">
@@ -29,41 +30,51 @@
     </div>
     <div class="admin-columns">
       <div class="panel-card form-card">
-        <h2>Configuración de operación</h2>
+        <h2>Configuración del servicio</h2>
         <form (ngSubmit)="vm.saveSettings()">
           <label>Nombre del punto<input name="cafeteria" [(ngModel)]="vm.settings.name" /></label
           ><label
-            >Aviso mínimo (minutos)<input
+            >Anticipación mínima para pedir (minutos)<input
               type="number"
               min="0"
               max="1440"
+              step="1"
               name="notice"
-              [(ngModel)]="vm.settings.minimumNoticeMinutes" /></label
+              [(ngModel)]="vm.settings.minimumNoticeMinutes"
+              aria-describedby="minimum-notice-help"
+              required />
+            <small id="minimum-notice-help" class="field-help">
+              Tiempo mínimo entre confirmar un pedido y su recogida. Por ejemplo, 30 impide elegir
+              franjas que empiecen en menos de 30 minutos. Usa 0 para no exigir anticipación; máximo: 24 horas.
+            </small></label
           ><label class="check-label"
             ><input type="checkbox" name="paused" [(ngModel)]="vm.settings.ordersPaused" /> Pausar
             nuevos pedidos</label
-          ><button class="button button-primary">Guardar configuración</button>
+          ><button class="button button-primary">Guardar ajustes del servicio</button>
         </form>
         <hr />
         <h2>Horario semanal</h2>
-        <div class="opening-row" *ngFor="let hour of vm.openingHours; let i = index">
-          <strong>{{ vm.weekdays[i] }}</strong
-          ><label class="check-label"
-            ><input type="checkbox" [(ngModel)]="hour.closed" [name]="'closed' + i" />
-            Cerrado</label
-          ><ng-container *ngIf="!hour.closed"
-            ><input
-              type="time"
-              [(ngModel)]="hour.opensAt"
-              [name]="'opens' + i"
-              aria-label="Hora de apertura" /><input
-              type="time"
-              [(ngModel)]="hour.closesAt"
-              [name]="'closes' + i"
-              aria-label="Hora de cierre"
-          /></ng-container>
-        </div>
-        <button class="button button-outline" (click)="vm.saveSchedule()">Guardar horario</button>
+        <p class="helper-text">Define las horas de atención de cada día. Después guarda el horario y genera las franjas de recogida para las fechas que vayas a habilitar.</p>
+        <form class="weekly-schedule-form" (ngSubmit)="vm.saveSchedule()">
+          <div class="opening-row" *ngFor="let hour of vm.openingHours; let i = index">
+            <strong>{{ vm.weekdays[i] }}</strong
+            ><label class="check-label"
+              ><input type="checkbox" [(ngModel)]="hour.closed" [name]="'closed' + i" />
+              Cerrado</label
+            ><ng-container *ngIf="!hour.closed"
+              ><input
+                type="time"
+                [(ngModel)]="hour.opensAt"
+                [name]="'opens' + i"
+                aria-label="Hora de apertura" /><input
+                type="time"
+                [(ngModel)]="hour.closesAt"
+                [name]="'closes' + i"
+                aria-label="Hora de cierre"
+            /></ng-container>
+          </div>
+          <button class="button button-outline" type="submit">Guardar horario semanal</button>
+        </form>
         <hr />
         <h2>Excepción de fecha</h2>
         <form (ngSubmit)="vm.addException()">
@@ -93,35 +104,45 @@
           <button class="button button-outline">Guardar excepción</button>
         </form>
         <hr />
-        <h2>Crear franja</h2>
-        <form (ngSubmit)="vm.createSlot()">
+        <h2>Generar franjas de recogida</h2>
+        <p class="helper-text">Usa el horario semanal guardado o la excepción de esa fecha. Se crearán intervalos consecutivos; la última franja puede ser más corta para ajustarse al cierre. Si ya hay franjas que se cruzan, no se cambiará nada.</p>
+        <form class="slot-generation-form" (ngSubmit)="vm.generateSlotsFromSchedule()">
           <label
-            >Inicio (hora de Bogotá)<input
-              type="datetime-local"
-              name="slotStart"
-              [(ngModel)]="vm.slotDraft.startsAt"
+            >Fecha de recogida (hora de Bogotá)<input
+              type="date"
+              name="slotDate"
+              [(ngModel)]="vm.slotGeneration.date"
+              (change)="vm.loadSlotsForDate()"
               required /></label
-          ><label
-            >Fin (hora de Bogotá)<input
-              type="datetime-local"
-              name="slotEnd"
-              [(ngModel)]="vm.slotDraft.endsAt"
-              required /></label
-          ><label
-            >Capacidad (pedidos)<input
-              type="number"
-              name="capacity"
-              min="0"
-              [(ngModel)]="vm.slotDraft.capacity"
-              required /></label
-          ><button class="button button-primary">Crear franja</button>
+          ><div class="form-grid">
+            <label
+              >Duración de cada franja (minutos)<input
+                type="number"
+                name="slotInterval"
+                min="5"
+                max="240"
+                step="5"
+                [(ngModel)]="vm.slotGeneration.intervalMinutes"
+                required /></label
+            ><label
+              >Capacidad por franja (pedidos)<input
+                type="number"
+                name="slotCapacity"
+                min="1"
+                max="10000"
+                [(ngModel)]="vm.slotGeneration.capacity"
+                required /></label
+          ></div>
+          <button class="button button-primary" type="submit" [disabled]="vm.isGeneratingSlots">
+            {{ vm.isGeneratingSlots ? 'Generando franjas…' : 'Generar franjas desde el horario' }}
+          </button>
         </form>
         <hr />
-        <h2>Franjas de hoy</h2>
+        <h2>Franjas del {{ vm.slotGeneration.date }} (hora de Bogotá)</h2>
         <div class="admin-slot" *ngFor="let slot of vm.adminSlots; let i = index">
           <div>
             <strong>{{ vm.time(slot.startsAt) }} – {{ vm.time(slot.endsAt) }}</strong
-            ><small>{{ slot.id.slice(0, 8) }}</small>
+            ><small>Recogida · capacidad máxima de {{ slot.capacity }} pedidos</small>
           </div>
           <label
             >Capacidad<input
@@ -137,7 +158,7 @@
           <button class="text-button" (click)="vm.saveSlot(slot)">Guardar</button>
         </div>
         <p class="helper-text" *ngIf="!vm.adminSlots.length">
-          No hay franjas configuradas para hoy.
+          No hay franjas configuradas para esta fecha.
         </p>
       </div>
       <div class="panel-card report-card">
