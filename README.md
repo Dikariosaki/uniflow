@@ -4,24 +4,24 @@ UniFlow is an order-ahead and pickup application for the cafeteria at Universida
 
 ## Start locally
 
-1. Create a Supabase project and copy `.env.example` to `.env`.
-2. Set the project URL, public anon key, server-only service-role key, and PostgreSQL connection string. Use the project's direct database connection or a session pooler for EF migrations.
-3. Set `MIGRATE_ON_STARTUP=true` for the first start. The API applies the checked-in EF migrations. It also creates the public `product-images` bucket (up to 5 MB, JPEG/PNG/WebP) when the service-role key is configured. Set `MIGRATE_ON_STARTUP=false` after the schema is initialized if migrations are managed separately.
+1. Create a Supabase project and copy `.env.backend.example` to `.env.backend` and `.env.frontend.example` to `.env.frontend`.
+2. Put the database connection and service-role key only in `.env.backend`. Put the Supabase URL and public anon key in both files. The frontend file must never contain database credentials or the service-role key.
+3. In `.env.backend`, set `Database__MigrateOnStartup=true` for the first start if you want the API to apply the checked-in EF migrations. Set it back to `false` after initialization. The API can also create the `uniflow-images` bucket when the service-role key is configured.
 4. Run `docker compose up --build`; open <http://localhost:8080>.
 
-The web container receives only the Supabase anon key. The database password and service-role key are passed only to the API. Do not commit `.env` or publish the service-role key.
+Compose loads `.env.backend` into the API container and `.env.frontend` into the Angular/Nginx container. The database password and service-role key are passed only to the API. Do not commit either local file or publish the service-role key.
 
 ## Deploy test environment on Render
 
-The [Render Blueprint setup](RENDER.md) defines Docker services for the frontend and API, including Dockerfile paths, health checks, dynamic ports, and service URL wiring. It expects an existing Supabase project; add the database connection and Supabase keys as secrets in Render. No custom domain is required.
+The [Render deployment guide](RENDER.md) explains how to create two separate Free Web Services manually. Add the backend variables to the API service and only public frontend variables to the web service. No custom domain is required.
 
 ## Swagger and Docker troubleshooting
 
-With Compose running, open Swagger at <http://localhost:8081/swagger/> (API directly) or <http://localhost:8080/swagger/> (through the web proxy). The API port is bound to localhost and configurable with `API_PORT`; `SWAGGER_ENABLED=false` disables the documentation. The OpenAPI document is `/swagger/v1/swagger.json`. Swagger's **Authorize** accepts a Supabase Auth access token; roles are still checked by the API. `POST /api/v1/orders` also requires an `Idempotency-Key` header, shown in Swagger. Reuse that key only for retries of the same order.
+With Compose running, open Swagger at <http://localhost:8081/swagger/> (API directly) or <http://localhost:8080/swagger/> (through the web proxy). Set `Swagger__Enabled=false` in `.env.backend` to disable the documentation. The OpenAPI document is `/swagger/v1/swagger.json`. Swagger's **Authorize** accepts a Supabase Auth access token; roles are still checked by the API. `POST /api/v1/orders` also requires an `Idempotency-Key` header, shown in Swagger. Reuse that key only for retries of the same order.
 
 Building an image does not start its container: use `docker compose up --build -d`. Check `docker compose ps` and `docker compose logs --tail=80 api`. Compose waits for the API's PostgreSQL readiness check before starting the web container. A running but unhealthy API usually indicates a database connection problem; the API is still reachable directly on port 8081 for Swagger and health diagnostics. `/health` and `/api/v1/health` return 503 until PostgreSQL is reachable. Health logs report error types/codes without printing connection credentials.
 
-`SUPABASE_DB_CONNECTION` accepts either an Npgsql string (`Host=...;Port=5432;Database=postgres;Username=...;Password=...;SSL Mode=Require`) or `postgresql://USER:PASSWORD@HOST:PORT/postgres?sslmode=require`. URI passwords containing reserved characters must be percent-encoded. The API normalizes URI connections before passing them to Npgsql. Use the exact **Connect** values from your Supabase project. When the deployment has no IPv6 route to the direct database, select **Session pooler** and use its host, port, and username; changing only the direct hostname is insufficient. Keep real credentials in `.env` and apply the SQL/migrations before placing orders.
+`ConnectionStrings__Supabase` in `.env.backend` accepts an Npgsql string (`Host=...;Port=5432;Database=postgres;Username=...;Password=...;SSL Mode=Require`) or a PostgreSQL URI. Use the exact **Connect** values from your Supabase project. When the deployment has no IPv6 route to the direct database, select **Session pooler** and use its host, port, and username. Keep real credentials in `.env.backend` and apply the SQL/migrations before placing orders.
 
 The checkout now shows API validation messages (closed cafeteria, paused orders, full slots, unavailable products) and connection/service failures while preserving the cart. A realtime notification failure after a database commit does not turn the persisted order into a failed confirmation; tracking retains its polling fallback.
 
