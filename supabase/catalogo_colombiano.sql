@@ -1,4 +1,4 @@
--- Catálogo colombiano para la carta de Cafetería Bosque Popular.
+-- Catálogo colombiano para la carta de Cafetería Bloque B de la Universidad Libre.
 -- Incluye 50 productos, inventario inicial, horario y 14 días de franjas.
 -- Reejecutable: los IDs deterministas actualizan estas mismas filas.
 -- Precios, jornada y cupo son una propuesta realista para Bogotá; validar con la empresa antes de abrir pedidos.
@@ -10,7 +10,7 @@ SET LOCAL lock_timeout = '15s';
 SELECT pg_advisory_xact_lock(214731, 2);
 
 INSERT INTO public.business_settings ("Id", "Name", "TimeZone", "OrdersPaused", "MinimumNoticeMinutes")
-VALUES (1, 'Cafetería Bosque Popular', 'America/Bogota', false, 10)
+VALUES (1, 'Cafetería Bloque B', 'America/Bogota', false, 10)
 ON CONFLICT ("Id") DO UPDATE SET
     "Name" = EXCLUDED."Name",
     "TimeZone" = EXCLUDED."TimeZone",
