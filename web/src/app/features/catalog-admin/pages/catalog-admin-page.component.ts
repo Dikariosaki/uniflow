@@ -13,8 +13,26 @@ import { CatalogAdminStore } from '../data-access/catalog-admin.store';
 })
 export class CatalogAdminPage implements OnInit, OnDestroy {
   private readonly store = inject(CatalogAdminStore);
+  productSearchTerm = '';
   get vm() {
     return this.store.view();
+  }
+
+  get filteredProducts() {
+    const query = this.productSearchTerm
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim()
+      .toLocaleLowerCase('es');
+    if (!query) return this.vm.adminProducts;
+
+    return this.vm.adminProducts.filter((product) =>
+      `${product.name} ${product.categoryName} ${product.description ?? ''}`
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLocaleLowerCase('es')
+        .includes(query),
+    );
   }
 
   ngOnInit() {

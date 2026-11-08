@@ -65,11 +65,29 @@
       </div>
       <div class="panel-card catalog-admin">
         <div class="table-head">
-          <strong>Productos publicados</strong><span>{{ vm.adminProducts.length }} productos</span>
+          <strong>Productos publicados</strong><span>{{ filteredProducts.length }} de {{ vm.adminProducts.length }}</span>
         </div>
+        <label class="published-product-search">
+          <span class="material-symbol" aria-hidden="true">search</span>
+          <input
+            type="search"
+            name="publishedProductSearch"
+            [(ngModel)]="productSearchTerm"
+            placeholder="Buscar por producto o categoría"
+            aria-label="Buscar productos publicados"
+          />
+          <button
+            *ngIf="productSearchTerm"
+            type="button"
+            class="published-product-search-clear"
+            aria-label="Limpiar búsqueda"
+            (click)="productSearchTerm = ''"
+          ><span class="material-symbol" aria-hidden="true">close</span></button>
+        </label>
+        <div class="published-products-scroll" tabindex="0" aria-label="Lista de productos publicados">
         <article
           class="admin-product"
-          *ngFor="let product of vm.adminProducts; trackBy: vm.trackProduct"
+          *ngFor="let product of filteredProducts; trackBy: vm.trackProduct"
         >
           <div class="admin-thumb">
             <img *ngIf="product.imageUrl" [src]="product.imageUrl" [alt]="product.name" /><span
@@ -110,6 +128,12 @@
             /></label>
           </div>
         </article>
+        <div class="published-products-empty" *ngIf="!filteredProducts.length">
+          <span class="material-symbol" aria-hidden="true">search_off</span>
+          <strong>No encontramos productos</strong>
+          <span>Prueba con otro nombre o categoría.</span>
+        </div>
+        </div>
         <p class="helper-text">
           JPG, PNG o WebP. Se optimiza y convierte a WebP antes de subir; imagen original hasta 20 MB y archivo optimizado hasta 5 MB.
         </p>
